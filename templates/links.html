@@ -1,0 +1,18 @@
+{% load static %}
+<html>
+    <h1>Home Page</h1>
+    <h1>Welcome {{request.session.name}}</h1>
+    <a href="{% url 'admin_page' %}">Admin</a><br>
+    <a href="{% url 'signup1'  %}">signup1</a><br>
+    <a href="{% url 'mylogin' %}">login</a><br>
+    <a href="{% url 'advisors_page' %}">advisors_page</a><br>
+    <a href="{% url 'history_lessons' %}">history_lessons</a><br>
+    <a href="{% url 'reserved_lessons' %}">reserved_lessons</a><br>
+    <a href="{% url 'lesson_details' 3 %}">lesson_details</a><br>
+    <a href="{% url 'lesson_reservation' %}">lesson_reservation</a><br>
+    <a href="{% url 'logout' %}">logout</a><br>
+    {% for user in users %}
+    <h1>{{user.email}} {{user.username}} </h1>
+    
+    {% endfor %}
+</html>

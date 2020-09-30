@@ -1,0 +1,412 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/advisors.css' %}">
+    <title>Advisors</title>
+</head>
+
+<body id="body">
+    {% include "navbar.html" %}
+    <div class="modal" id="myModal" data-backdrop="static" data-keyboard="false" tabindex="-1">
+
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <img src="{{MEDIA_URL}}/media/Outline.svg" class="img-modal">
+                    <p class="modal-text">レッスン開始まで1分前です</p>
+                    <p class="modal-timer" id="timer"></p>
+                    <button type="button" class="modal-btn" id="modal-btn"><a href="{% url 'chat' %}" cladd="modal-btn">
+                            <span class="text-modal-btn">レッスンを開始 </span></a></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="rating" data-backdrop="static" data-keyboard="false" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <img src="{{MEDIA_URL}}/media/942191.svg" class="img-modal">
+                    <p class="modal-text">レッスン開始が終了しました 今回のレッスンはいかがでしたか？</p>
+                    <div class="rating-container">
+                        <form class="rating" method="POST" action="{% url 'rate' %}">
+                            {% csrf_token %}
+                            <input class="h" id="lessonidd" name="lesson_id"></input>
+                            <label>
+                                <input type="submit" name="1" value="1" />
+                                <span class="icon">★</span>
+                            </label>
+                            <label>
+                                <input type="submit" name="2" value="2" />
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                            </label>
+                            <label>
+                                <input type="submit" name="3" value="3" />
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                            </label>
+                            <label>
+                                <input type="submit" name="4" value="4" />
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                            </label>
+                            <label>
+                                <input type="submit" name="5" value="5" />
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                            </label>
+                        </form>
+                    </div>
+                    <a href="#" class="close" data-dismiss="modal">閉じる</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mobile-version-upper-nav">
+        <img src="{{MEDIA_URL}}/media/logo_mobile.png">
+    </div>
+    <!-- <p class="position-absolute" id='timeMin'>{{todays_session.1}}</p> -->
+    <div id="cards">
+    {% if instructors %}
+        {% for ins in instructors %}
+        
+        <div class="card" id="mycard">
+            <a href="{% url 'profile' ins.Id %}">
+
+            <img src="{{ MEDIA_URL }}/media/{{ins.img}}" class="img-card" alt="...">
+            <div>
+                <a href="{% url 'profile' ins.Id %}" class="card-title"> {{ins.name}}</a>
+                <div class="ins-field text-truncate">
+                    <p class="ins-field-text text-truncate">{{ins.field}}</p>
+                </div>
+                <p class="ins_what_you_can_ask_for text-truncate">{{ins.what_you_can_ask_for}}</p>
+                <div class="stars">
+                    {% if ins.rating >= 5  %}
+                    <span class="fa fa-star starchecked"></span>
+                    <span class="fa fa-star starchecked"></span>
+                    <span class="fa fa-star starchecked"></span>
+                    <span class="fa fa-star starchecked"></span>
+                    <span class="fa fa-star starchecked"></span>
+                    {% elif ins.rating >= 4 %}
+                    <span class="fa fa-star starchecked"></span>
+                    <span class="fa fa-star starchecked"></span>
+                    <span class="fa fa-star starchecked"></span>
+                    <span class="fa fa-star starchecked"></span>
+                    <span class="fa fa-star"></span>
+                    {% elif ins.rating >= 3 %}
+                    <span class="fa fa-star starchecked"></span>
+                    <span class="fa fa-star starchecked"></span>
+                    <span class="fa fa-star starchecked"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                    {% elif ins.rating >= 2 %}
+                    <span class="fa fa-star starchecked"></span>
+                    <span class="fa fa-star starchecked"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                    {% elif ins.rating >= 1 %}
+                    <span class="fa fa-star starchecked"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                    {% elif ins.rating == 0 %}
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                    {% else %}
+                    <span>No Raing yet</span>
+                    {% endif %}
+                </div>
+            </div>
+            </a>
+        </div>
+        {% endfor %}
+    {% endif %}
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+    <!-- <script src="{% static 'chat/scripts/modal.js' %}"></script> -->
+    <script>
+       document.getElementById("searchbar").onkeyup = function () {
+            searchCard();
+        }
+
+        document.getElementById("searchbarResizable").onkeyup = function () {
+            searchCardResize();
+        }
+        function searchCard() {
+            var input = document.getElementById("searchbar");
+            var filter = input.value.toUpperCase();
+
+            var mYcards = document.getElementById("cards");
+            var myCard = mYcards.getElementsByClassName("card");
+            for (var i = 0; i < myCard.length; i++) {
+                var text1 = myCard[i].getElementsByTagName("p")[0];
+                var text2 = myCard[i].getElementsByTagName("p")[1];
+                // var h5 = myCard[i].getElementsByTagName("h5");
+                var advisorname = myCard[i].getElementsByClassName("card-title")[0];
+                if (advisorname || text1 || text2) {
+                    var par1 = advisorname.textContent || advisorname.innerText;
+                    var par2 = text1.textContent || text1.innerText;
+                    var par3 = text2.textContent || text2.innerText;
+                    if (par1.toUpperCase().indexOf(filter) > -1 || par2.toUpperCase().indexOf(filter) > -1 || par3.toUpperCase().indexOf(filter) > -1) {
+                        myCard[i].style.display = "";
+                    }
+                    else {
+                        myCard[i].style.display = "none";
+                    }
+                }
+
+
+
+            }
+
+        }
+
+
+        function searchCardResize() {
+            var input = document.getElementById("searchbarResizable");
+            var filter = input.value.toUpperCase();
+
+            var mYcards = document.getElementById("cards");
+            var myCard = mYcards.getElementsByClassName("card");
+            for (var i = 0; i < myCard.length; i++) {
+                var text1 = myCard[i].getElementsByTagName("p")[0];
+                var text2 = myCard[i].getElementsByTagName("p")[1];
+                // var h5 = myCard[i].getElementsByTagName("h5");
+                var advisorname = myCard[i].getElementsByClassName("card-title")[0];
+                if (advisorname || text1 || text2) {
+                    var par1 = advisorname.textContent || advisorname.innerText;
+                    var par2 = text1.textContent || text1.innerText;
+                    var par3 = text2.textContent || text2.innerText;
+                    if (par1.toUpperCase().indexOf(filter) > -1 || par2.toUpperCase().indexOf(filter) > -1 || par3.toUpperCase().indexOf(filter) > -1) {
+                        myCard[i].style.display = "";
+                    }
+                    else {
+                        myCard[i].style.display = "none";
+                    }
+                }
+
+            }
+
+        }
+        
+
+        var startsession = document.getElementById("modal-btn");
+
+        var ti = document.getElementsByClassName("timelesson");
+        var lessonhour;
+        var lessonMinute;
+        var lhourparse;
+        var lminuteparse;
+
+
+        var lessonhour1;
+        var lessonMinute1;
+        var lhourparse1;
+        var lminuteparse1;
+        var NEXTlessonhour;
+        var NEXTlessonMinute;
+        var NEXTlhourparse;
+        var NEXTlminuteparse;
+        var idd;
+        var idparse
+        var lsidd = document.getElementById("lessonidd");
+        console.log(lsidd)
+        for (var i = 0; i < ti.length - 1; i++) {
+            lessonhour1 = ti[i].innerHTML.slice(13, 16);
+            lessonMinute1 = ti[i].innerHTML.slice(17, 20);
+            
+
+            lhourparse1 = parseInt(lessonhour1, 10);
+            lminuteparse1 = parseInt(lessonMinute1, 10);
+            
+
+            var NEXTlessonhour = ti[i + 1].innerHTML.slice(13, 16);
+            var NEXTlessonMinute = ti[i + 1].innerHTML.slice(17, 20);
+            var NEXTlhourparse = parseInt(NEXTlessonhour, 10);
+            var NEXTlminuteparse = parseInt(NEXTlessonMinute, 10);
+
+            var lastless = ti[ti.length-1].innerHTML.slice(13, 16);
+            var lstparse = parseInt(lastless, 10);
+
+
+            idd = ti[i].innerHTML.slice(20, 30);
+            var idparse = parseInt(idd, 10);
+
+            var today = new Date();
+            var hour = today.getHours();
+            var minute = today.getMinutes();
+
+            if((hour > lhourparse1+1 && hour < NEXTlhourparse) || hour > lstparse+1){
+                lsidd.innerHTML = idparse;
+            }
+            else{
+                idd.innerHTML = "";
+            }
+
+
+        }
+        
+
+        //cuntdown modal
+        var beforestartsession = setInterval(function () {
+            
+            for (var i = 0; i < ti.length; i++) {
+                // console.log(ti[i])
+                lessonhour = ti[i].innerHTML.slice(13, 16);
+                lessonMinute = ti[i].innerHTML.slice(17, 20);
+                lhourparse = parseInt(lessonhour, 10);
+                lminuteparse = parseInt(lessonMinute, 10);
+                // console.log(lminuteparse);
+
+                var h = lhourparse;
+                var m = lminuteparse;
+
+                //current time
+                var today = new Date();
+                var hour = today.getHours();
+                // console.log(hour);
+                var minute = today.getMinutes();
+                var seconds = today.getSeconds();
+                if(hour < h+1 || ( hour = h+1 && minute < m)){
+                    document.getElementById("chaticon").href = "{% url 'chat' %}";
+                    document.getElementById("chaticon1").href = "{% url 'chat' %}";
+                    document.getElementById("chaticon2").href = "{% url 'chat' %}";
+                    console.log(h);
+                }
+                else if(hour == h && minute == m){
+                    document.getElementById("chaticon").href = "{% url 'chat' %}";
+                    document.getElementById("chaticon1").href = "{% url 'chat' %}";
+                    document.getElementById("chatico2").href = "{% url 'chat' %}";
+                }
+                else{
+                    document.getElementById("chaticon").href = "";
+                    document.getElementById("chaticon1").href = "";
+                    document.getElementById("chaticon2").href = "";
+                }
+
+                if (hour == h && minute == m) {
+                    $("#myModal").modal("show");
+
+                    
+                    startsession.disabled = true;
+                    clearInterval(beforestartsession);
+                    if (seconds > 0) {
+                        var sec = 60 - seconds;
+                        countdown(sec);
+                    }
+                    else if (seconds == 0) {
+                        countdown(60);
+                    }
+
+                }
+                
+            }
+            startsession.disabled = false;
+
+        }, 1000);
+        // $('#rating').modal('show');
+
+        //rating modal
+        var ratingmodal = setInterval(function () {
+            //ending time lesson
+            for (var i = 0; i < ti.length; i++) {
+                lessonhour = ti[i].innerHTML.slice(13, 16);
+                lessonMinute = ti[i].innerHTML.slice(17, 20);
+                lhourparse = parseInt(lessonhour, 10);
+                lminuteparse = parseInt(lessonMinute, 10);
+
+
+                var h = lhourparse + 1;
+                var min = lminuteparse;
+                var today = new Date();
+                var hour = today.getHours();
+                var minute = today.getMinutes();
+                if (h == hour && min == minute) {
+                    $('#rating').modal('show');
+                    $('#myModal').modal('hide');
+
+
+                }
+            }
+        }, 1000);
+
+
+        function countdown(sec) {
+            var timer = document.getElementById("timer");
+            var timer1 = document.getElementById("timer1");
+            var timer2 = document.getElementById("timer2");
+            var counter = 0;
+            var timeleft = sec;
+            var time = convertSeconds(timeleft - counter);
+            timer.innerHTML = convertSeconds(timeleft - counter);
+            timer1.innerHTML = convertSeconds(timeleft - counter);
+            timer2.innerHTML = convertSeconds(timeleft - counter);
+            var internal = setInterval(function () {
+                counter++;
+                timer.innerHTML = convertSeconds(timeleft - counter);
+                timer1.innerHTML = convertSeconds(timeleft - counter);
+                timer2.innerHTML = convertSeconds(timeleft - counter);
+                if (counter === timeleft) {
+                    clearInterval(internal);
+                }
+            }, 1000);
+        }
+
+        function convertSeconds(s) {
+            var min = Math.floor(s / 60);
+            var sec = s % 60;
+            var minformat;
+            var secformat;
+            if (min < 10) {
+                minformat = ("0" + min).slice(-2);
+            }
+            else {
+                minformat = min;
+            }
+            if (sec < 10) {
+                secformat = ("0" + sec).slice(-2);
+            }
+            else {
+                secformat = sec;
+            }
+            return minformat + ":" + secformat;
+        }
+
+        // console.log(document.getElementById("lessonidd").innerHTML);
+    </script>
+</body>
+
+</html>

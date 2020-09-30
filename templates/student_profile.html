@@ -1,0 +1,577 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <title>Profile</title>
+</head>
+
+<body>
+    {% include "navbar.html" %}
+    <div class="modal" id="myModal" data-backdrop="static" data-keyboard="false" tabindex="-1">
+
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <img src="{{MEDIA_URL}}/media/Outline.svg" class="img-modal">
+                    <p class="modal-text">レッスン開始まで1分前です</p>
+                    <p class="modal-timer" id="timer"></p>
+                    <button type="button" class="modal-btn" id="modal-btn"><a href="{% url 'chat' %}" cladd="modal-btn">
+                            <span class="text-modal-btn">レッスンを開始 </span></a></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="rating" data-backdrop="static" data-keyboard="false" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <img src="{{MEDIA_URL}}/media/942191.svg" class="img-modal">
+                    <p class="modal-text">レッスン開始が終了しました 今回のレッスンはいかがでしたか？</p>
+                    <div class="rating-container">
+                        <form class="rating" method="POST" action="{% url 'rate' %}">
+                            {% csrf_token %}
+                            <input class="h" id="lessonidd" name="lesson_id"></input>
+                            <label>
+                                <input type="submit" name="1" value="1" />
+                                <span class="icon">★</span>
+                            </label>
+                            <label>
+                                <input type="submit" name="2" value="2" />
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                            </label>
+                            <label>
+                                <input type="submit" name="3" value="3" />
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                            </label>
+                            <label>
+                                <input type="submit" name="4" value="4" />
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                            </label>
+                            <label>
+                                <input type="submit" name="5" value="5" />
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                            </label>
+                        </form>
+                    </div>
+                    <a href="#" class="close" data-dismiss="modal">閉じる</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mobile-version-upper-nav">
+        <img src="{{MEDIA_URL}}/media/logo_mobile.png">
+    </div>
+
+    <div class="whole-body">
+        <div class="d-flex flex-row bg-user">
+            <div class="d-flex flex-column img-container-mobile">
+                <img src="{{MEDIA_URL}}/media/{{user.img}}" class="img-profile">
+                {% if logged_user.Id == user.Id %}
+                <a href="{% url 'logout' %}" class="logout">ログアウト</a>
+                {% endif %}
+            </div>
+
+            <div class="box-info">
+                <div class="row">
+                    <h3 class="name">{{user.name}}</h3>
+                    {% if logged_user.Id == user.Id %}
+                    <button type="button" id="edit-profile"><span class="edit-profile-text">プロフィールの編集</span>
+                        <!--edit profile--></button>
+                    {% endif %}
+                </div>
+
+                <div class="info-box">
+                    <div class="row">
+                        <p class="text-secondary">相談したいこと
+                            <!--ocuppation-->
+                        </p>
+                        <p class="text-secondary1">{{user.field}}
+                            <!--IT president-->
+                        </p>
+                    </div>
+                </div>
+                <div>
+                    <p class="info_6">
+                        {{user.intro_msg}}
+                    </p>
+                </div>
+            </div>
+
+
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <b>
+                    <h4 style="color: red;" {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}
+                    </h4>
+                </b>
+                {% endfor %}</ul>
+            {% endif %}
+        </div>
+        <p class="info_6-mobile">
+            {{user.intro_msg}}
+        </p>
+
+        {% if logged_user.Id == user.Id %}
+        <button type="submit" id="edit-profile-mobile"><a href="{% url 'edit_student_profile' user.Id %}" class="edit-profile-text-mobile">プロフィールの編集</a>
+            <!--edit profile--></button>
+        {% endif %}
+
+        {% if logged_user.Id == user.Id %}
+        <a href="{% url 'logout' %}" class="logout-mobile">ログアウト</a>
+        {% endif %}
+    </div>
+
+
+    <div class="whole-body1">
+        <div class="navigation list-group" id="list-tab" role="tablist">
+            <a class="text-nav" href="#scheduled_lesson" id="scheduled_lesson_link" data-toggle="list"
+                role="tab">レッスン予定</a>
+            <!--scheduled lesson-->
+            <a class="text-nav d-block mr-auto ml-4" href="#history" id="history_link" data-toggle="list" role="tab">履歴
+                <!--history--></a>
+        </div>
+
+        <div class="tab-content" id="nav-tabContent">
+            <div class="lessons-card tab-pane show active" id="scheduled_lesson" role="tabpanel">
+                <!-- scheduled lessons for students NEED TO BE FIXED -->
+                <div class="row justify-content-between lessonsCard">
+                    {% for lesson in available_lessons %}
+                    <div class="lessonCard lessonCrd-mobile">
+                        <div class="row inside">
+                            <a href="{% url 'profile' lesson.instructor.Id %}"> <img
+                                    src="{{MEDIA_URL}}/media/{{lesson.instructor.img}}" class="img-card-lessRes">
+                            </a>
+                            <div>
+                                <div class="d-flex flex-row card-info-box">
+                                    <div class="title-bar title-bar-card-m"></div>
+                                    <a href="{% url 'lesson_details' lesson.id %}"
+                                        class="lesson-title">{{lesson.title}}</a>
+                                </div>
+                                <a href="{% url 'lesson_details' lesson.id %}" class="lesson-date">
+                                    <p>{{lesson.date_to_display}}
+                                        {{lesson.starting}} ~ {{ lesson.ending }} </p>
+                                </a>
+                            </div>
+
+                            {% if  request.session.user_type == "student" %}
+                            <a href="{% url 'request_session' lesson.id %}" class="request_session">レッスンをリクエスト</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            <div class="lessons-card tab-pane" id="history" role="tabpanel">
+                <div class="d-flex flex-row justify-content-between">
+                    <!-- HISTORY LESSONS FRO STUDENTS NEED TO BE FIXED -->
+                    <div class="row justify-content-between lessonsCard">
+                        {% for lesson in history_lessons %}
+                        <div class="lessonCard">
+                            <div class="row inside">
+                                <a href="{% url 'profile' lesson.instructor.Id %}"> <img
+                                        src="{{MEDIA_URL}}/media/{{lesson.instructor.img}}" class="img-card-lessRes">
+                                </a>
+                                <div>
+                                    <div class="d-flex flex-row card-info-box">
+                                        <div class="title-bar title-bar-card-m"></div>
+                                        <a href="{% url 'lesson_details' lesson.id %}" class="lesson-title">
+                                            <p>{{lesson.title}}
+
+                                            </p>
+                                        </a>
+                                    </div>
+                                    <a href="{% url 'lesson_details' lesson.id %}" class="lesson-date">
+                                        <p>{{lesson.date_to_display}}
+                                            {{lesson.starting}} ~ {{ lesson.ending }} </p>
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="whole-body2">
+        <div class="navigation list-group">
+            <a class="text-nav nav-active" id="list-schedule-class_link" data-toggle="list" href="#list-schedule-classes"
+                role="tab">保留中のリクエスト</a>
+
+        </div>
+
+        <div class="tab-content" id=nav-tabContent>
+            <div class="tab-pane show active" id="list-schedule-classes" role="tabpanel">
+                <div class="widgets">
+                    {% if wfs %}
+                    {% for wf in wfs %}
+                    <div class="student-widget" id="list-schedule-class">
+                        <h5 class="ml-3">レッスンタイトル: {{wf.lesson.title}}</h5>
+                        <h5 class="ml-3 text-truncate">講師の名前: {{wf.instructor.name}}</h5>
+                        <h5 class="ml-3">リクエスト情報: {{wf.status}}</h5>
+                        <div class="column ml-3">
+                            <div class="d-flex flex-row ml-1">
+                                <div class="title-bar"></div>
+                                <p class="ml-1 mt-3">3レッスンのスケジュールリクエストを送信する</p>
+                            </div>
+                            <form method="POST" action="{% url 'student_final_confirmation' wf.id %}" class="">
+                                {% csrf_token %}
+                                <div class="d-flex flex-row ml-2">
+                                    <p>候補日1</p>
+                                    <p class="ml-5"> {{wf.option1}} </p>
+                                    {% if wf.option1_approved %}
+                                    <p class="ml-auto mr-5"> &#9989; </p>
+                                    {% elif not wf.option1_approved and wf.status == "Student Should Resubmit" %}
+                                    <p class="ml-auto mr-5">&#10060;</p>
+                                    {% endif %}
+                                </div>
+
+                                <div class="d-flex flex-row ml-2">
+                                    <p>候補日2</p>
+                                    <p class="ml-5">{{wf.option2}}</p>
+                                    {% if wf.option2_approved %}
+                                    <p class="ml-auto mr-5"> &#9989; </p>
+                                    {% elif not wf.option2_approved and wf.status == "Student Should Resubmit" %}
+                                    <p class="ml-auto mr-5">&#10060;</p>
+                                    {% endif %}
+                                </div>
+
+                                <div class="d-flex flex-row ml-2">
+                                    <p class="mt-1">候補日3</p>
+                                    <p class="ml-5">{{wf.option3}}</p>
+                                    {% if wf.option3_approved %}
+                                    <p class="ml-auto mr-5"> &#9989; </p>
+                                    {% elif not wf.option3_approved and wf.status == "Student Should Resubmit" %}
+                                    <p class="ml-auto mr-5">&#10060;</p>
+                                    {% endif %}
+                                </div>
+
+
+                                {% if wf.status == "Student Should Resubmit" %}
+                                <a href="{% url 'edit_session_request' wf.id %}" class="btn btn-outline-info go-to-chat">再送信</a>
+                                {% elif wf.status == "Both Approved" %}
+                                {% if wf.paid %}
+                                <p>Payment completed &#9989 </p>
+                                <p class="note">メッセージアイコンをクリックしてチャットページに移動して下さい</p>
+                                {% else %}
+                                <div class="paypal-button-container mx-auto d-block w-75" id="{{wf.id}}"></div>
+                                {% endif %}
+                                {% elif wf.status == "Instructor Approved" %}
+                                <button type="submit" name="submit"
+                                    class="btn btn-outline-info go-to-chat">同意する</button>
+                                {% endif %}
+                            </form>
+                        </div>
+                    </div>
+
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+    <script>
+        document.getElementById("edit-profile").onclick = function () {
+            window, location.href = "{% url 'edit_student_profile' logged_user.Id %}";
+        }
+
+        var firstlink = document.getElementById("scheduled_lesson_link");
+        var seclink = document.getElementById("history_link");
+        firstlink.classList.add("nav-active");
+        firstlink.addEventListener('click', function () {
+            firstlink.classList.add("nav-active");
+            seclink.classList.remove("nav-active");
+        });
+
+        seclink.addEventListener('click', function () {
+            firstlink.classList.remove("nav-active");
+            seclink.classList.add("nav-active");
+        });
+    </script>
+    <script
+        src="https://www.paypal.com/sdk/js?client-id=AVCdFST8A5TWAes1VGKVRNWbAcv0_imfnjlNEnNhEYkwF6aOT5Mc7LwUAvy8AeJDAiXUG8EG_1ra0lJj&currency=USD&disable-funding=credit"></script>
+
+    <script>
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
+
+        function completeOrder(wf_id) {
+            var url = "{% url 'complete_order' %}";
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({ 'wf_id': wf_id })
+            })
+
+        }
+
+        // Render the PayPal button into #paypal-button-container
+        var cont = document.getElementsByClassName("paypal-button-container");
+        for (var i = 0; i < cont.length; i++) {
+            var wf_id = cont[i].id;
+            paypal.Buttons({
+                // Set up the transaction
+                createOrder: function (data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {
+                                value: '20.01'
+                            }
+                        }]
+                    });
+                },
+
+                // Finalize the transaction
+                onApprove: function (data, actions) {
+                    return actions.order.capture().then(function (details) {
+                        // Show a success message to the buyer
+                        alert('Transaction completed by ' + details.payer.name.given_name + '!');
+                        completeOrder(wf_id);
+                        window.location.replace("{% url 'student_profile' user.Id %}");
+                    });
+                }
+
+
+            }).render(cont[i]);
+        }
+
+
+        var startsession = document.getElementById("modal-btn");
+
+        var ti = document.getElementsByClassName("timelesson");
+        var lessonhour;
+        var lessonMinute;
+        var lhourparse;
+        var lminuteparse;
+
+
+        var lessonhour1;
+        var lessonMinute1;
+        var lhourparse1;
+        var lminuteparse1;
+        var NEXTlessonhour;
+        var NEXTlessonMinute;
+        var NEXTlhourparse;
+        var NEXTlminuteparse;
+        var idd;
+        var idparse
+        var lsidd = document.getElementById("lessonidd");
+        for (var i = 0; i < ti.length - 1; i++) {
+            lessonhour1 = ti[i].innerHTML.slice(13, 16);
+            lessonMinute1 = ti[i].innerHTML.slice(17, 20);
+
+
+            lhourparse1 = parseInt(lessonhour1, 10);
+            lminuteparse1 = parseInt(lessonMinute1, 10);
+
+
+            var NEXTlessonhour = ti[i + 1].innerHTML.slice(13, 16);
+            var NEXTlessonMinute = ti[i + 1].innerHTML.slice(17, 20);
+            var NEXTlhourparse = parseInt(NEXTlessonhour, 10);
+            var NEXTlminuteparse = parseInt(NEXTlessonMinute, 10);
+
+            var lastless = ti[ti.length - 1].innerHTML.slice(13, 16);
+            var lstparse = parseInt(lastless, 10);
+
+
+            idd = ti[i].innerHTML.slice(20, 30);
+            var idparse = parseInt(idd, 10);
+
+            var today = new Date();
+            var hour = today.getHours();
+            var minute = today.getMinutes();
+
+            if ((hour > lhourparse1 + 1 && hour < NEXTlhourparse) || hour > lstparse + 1) {
+                lsidd.innerHTML = idparse;
+            }
+            else {
+                idd.innerHTML = "";
+            }
+
+
+        }
+
+        //cuntdown modal
+        var beforestartsession = setInterval(function () {
+
+            for (var i = 0; i < ti.length; i++) {
+                // console.log(ti[i])
+                lessonhour = ti[i].innerHTML.slice(13, 16);
+                lessonMinute = ti[i].innerHTML.slice(17, 20);
+                lhourparse = parseInt(lessonhour, 10);
+                lminuteparse = parseInt(lessonMinute, 10);
+                // console.log(lminuteparse);
+
+                var h = lhourparse;
+                var m = lminuteparse;
+
+                //current time
+                var today = new Date();
+                var hour = today.getHours();
+                // console.log(hour);
+                var minute = today.getMinutes();
+                var seconds = today.getSeconds();
+                if (hour < h + 1 || (hour = h + 1 && minute < m)) {
+                    document.getElementById("chaticon").href = "{% url 'chat' %}";
+                    document.getElementById("chaticon1").href = "{% url 'chat' %}";
+                    document.getElementById("chaticon2").href = "{% url 'chat' %}";
+                    console.log(h);
+                }
+                else if (hour == h && minute == m) {
+                    document.getElementById("chaticon").href = "{% url 'chat' %}";
+                    document.getElementById("chaticon1").href = "{% url 'chat' %}";
+                    document.getElementById("chatico2").href = "{% url 'chat' %}";
+                }
+                else {
+                    document.getElementById("chaticon").href = "";
+                    document.getElementById("chaticon1").href = "";
+                    document.getElementById("chaticon2").href = "";
+                }
+                if (hour == h && minute == m) {
+                    $("#myModal").modal("show");
+                    startsession.disabled = true;
+                    clearInterval(beforestartsession);
+                    if (seconds > 0) {
+                        var sec = 60 - seconds;
+                        countdown(sec);
+                    }
+                    else if (seconds == 0) {
+                        countdown(60);
+                    }
+
+                }
+            }
+            startsession.disabled = false;
+
+        }, 1000);
+
+        //rating modal
+        var ratingmodal = setInterval(function () {
+            //ending time lesson
+            for (var i = 0; i < ti.length; i++) {
+                lessonhour = ti[i].innerHTML.slice(13, 16);
+                lessonMinute = ti[i].innerHTML.slice(17, 20);
+                lhourparse = parseInt(lessonhour, 10);
+                lminuteparse = parseInt(lessonMinute, 10);
+
+
+                var h = lhourparse + 1;
+                var min = lminuteparse;
+                var today = new Date();
+                var hour = today.getHours();
+                var minute = today.getMinutes();
+                if (h == hour && min == minute) {
+                    $('#rating').modal('show');
+                    $('#myModal').modal('hide');
+
+                }
+            }
+        }, 1000);
+
+
+        function countdown(sec) {
+            var timer = document.getElementById("timer");
+            var counter = 0;
+            var timeleft = sec;
+            var time = convertSeconds(timeleft - counter);
+            timer.innerHTML = convertSeconds(timeleft - counter);
+            var internal = setInterval(function () {
+                counter++;
+                timer.innerHTML = convertSeconds(timeleft - counter);
+                if (counter === timeleft) {
+                    clearInterval(internal);
+                }
+            }, 1000);
+        }
+
+        function convertSeconds(s) {
+            var min = Math.floor(s / 60);
+            var sec = s % 60;
+            var minformat;
+            var secformat;
+            if (min < 10) {
+                minformat = ("0" + min).slice(-2);
+            }
+            else {
+                minformat = min;
+            }
+            if (sec < 10) {
+                secformat = ("0" + sec).slice(-2);
+            }
+            else {
+                secformat = sec;
+            }
+            return minformat + ":" + secformat;
+        }
+
+        console.log(document.getElementById("lessonidd").innerHTML);
+
+    </script>
+
+</body>
+
+</html>

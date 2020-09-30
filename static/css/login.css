@@ -1,0 +1,294 @@
+/* @font-face{
+    src: url('../static/fonts/hiragino-kaku-gothic-pron-w3.otf');
+    font-family: Hiragino Kaku Gothic ProN;
+} */
+body{
+    background: #F4F2F0;
+    border: 1px solid #F4F2F0;
+    margin-top: 0;
+    margin-left: 0;
+}
+
+nav{
+    height: 64px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    border-bottom: 1px solid #CCCCCC;
+}
+
+.logo{
+    margin-top: 5px;
+    margin-left: 30px;
+    height: 80%;
+}
+.logo-mobile{
+    display: none;
+}
+nav p{
+    margin-left: 12px;
+    width: 112px;
+    height: 28px;
+    text-align: left;
+    font: normal normal normal 28px/56px Hiragino Kaku Gothic ProN;
+    letter-spacing: 0px;
+    color: #AAAAAA;
+    opacity: 1;
+}
+
+.area-login{
+    position: absolute;
+    top: 124px;
+    left: 70px;
+    min-width: 402px;
+    max-width: 402px;
+    height: 400px;
+    opacity: 1;
+}
+
+.text1{
+    margin-bottom: 35px;
+    width: 128px;
+    text-align: left;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0px;
+    color: #1B1B1B;
+}
+.info{
+    margin-bottom: 25px;
+}
+label{
+    color: #555555;
+    font-size: 11px;
+}
+
+input, select{
+    width: 400px;
+    height: 36px;
+    background: #FAFAFA 0% 0% no-repeat padding-box;
+    border: 1px solid #E1E1E1;
+    opacity: 1;
+    padding: 8px;
+}
+input[type=password], input[type=email], option, option:focus{
+    text-align: left;
+    /* font: normal normal normal 13px/88px Hiragino Kaku Gothic ProN; */
+    font-size: 13px;
+    letter-spacing: 0px;
+    color: #878787;
+    opacity: 1;
+}
+.bg-btn{
+    width: 144px;
+    height: 32px;
+    border: 1px solid #1B1B1B;
+    border-radius: 4px;
+    opacity: 1;
+    margin-top: 5px;
+}
+.btn-text{
+    width: 77px;
+    height: 13px;
+    text-align: left;
+    /* font: normal normal normal 13px/19px Hiragino Kaku Gothic ProN; */
+    font-size: 13px;
+    letter-spacing: 0px;
+    color: #1B1B1B;
+    opacity: 1;
+}
+a{
+    display: block;
+    width: 180px;
+    text-align: left;
+    font: normal normal normal 12px/88px Hiragino Kaku Gothic ProN;
+    letter-spacing: 0px;
+    color: #0000FF;
+    margin-top: -10px;
+}
+
+.vertical{
+    position: absolute;
+    top: 124px;
+    left: 630px;
+    width: 1px;
+    height: 500px;
+    background-color: #CCCCCC;
+}
+
+.area-new{
+    position: absolute;
+    top: 124px;
+    left: 678px;
+    min-width: 373px;
+    max-width: 373px;
+    height: 140px;
+    opacity: 1;
+}
+
+.p1{
+    /* width: 160px; */
+    height: 16px;
+    margin-bottom: 35px;
+    text-align: left;
+    /* font: normal normal normal 16px/23px Hiragino Kaku Gothic ProN; */
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0px;
+    color: #1B1B1B;
+    opacity: 1;
+}
+.p2{
+    /* width: 400px; */
+    height: 12px;
+    text-align: left;
+    /* font: normal normal normal 12px/22px Hiragino Kaku Gothic ProN; */
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0px;    
+    color: #1B1B1B;
+    opacity: 1;
+    margin-bottom: 42px;
+}
+#Sign-up{
+    width: 144px;
+    height: 32px;
+    border: 1px solid #1B1B1B;
+    border-radius: 4px;
+    opacity: 1;
+}
+.mobile-version{
+    visibility: hidden;
+}
+@media screen and (max-width:640px){
+    body{
+        width: 100%;
+        height: 100%;
+        /* margin: 0; */
+        margin-left: 0;
+        margin-right: 0;
+    }
+    nav{
+        visibility: hidden;
+    }
+    .logo-mobile{
+        display: block;
+        margin-top: 30px;
+        margin-bottom: 50px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .info{
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width:98%;
+    }
+   
+   
+    .vertical{
+        position: static;
+        width: 98%;
+        height: 1px;
+        background-color: #CCCCCC;
+        margin-top: 100px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .area-login, .area-new{
+        position: static;
+        width: 98%;  
+    }
+    .area-new{
+        margin-top: 50px;
+        margin-bottom: 30px;
+       
+        
+    }
+    .text1{
+        width: 100%;
+        height: 14px;
+        text-align: left;
+        font: normal normal normal 14px/13px Hiragino Kaku Gothic ProN;
+        font-weight: 500px;
+        letter-spacing: 0px;
+        color: #1B1B1B;
+        margin-left: 20px;
+        margin-bottom: 21px;
+    }
+    .bg-btn{
+        width: 100%;
+        height: 46px;
+        background: #F00E8A00 0% 0% no-repeat padding-box;
+        border: 1px solid #070707;
+        border-radius: 12px;
+        margin-top: 30px;
+    }
+    #Sign-up{
+        width: 98%;
+        height: 49px;
+        background: #EB552100 0% 0% no-repeat padding-box;
+        border: 1px solid #070707;
+        border-radius: 14px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    a{
+        margin-top: 20px;
+        width: 233px;
+        text-align: left;
+        text-decoration: underline;
+        font: normal normal normal 14px/38px Hiragino Kaku Gothic ProN;
+        letter-spacing: 0px;
+        color: #0000FF;
+    }
+    
+    input, select{
+        width: 100%;
+        height: 46px;
+        background: #FAFAFA 0% 0% no-repeat padding-box;
+        border: 1px solid #E1E1E1;
+
+    }
+    input[type=password], input[type=email], option{
+        text-align: left;
+        font: normal normal normal 18px/38px Hiragino Kaku Gothic ProN;
+        letter-spacing: 0px;
+        color: #AAAAAA;
+    }
+    label{
+        width: 100%;
+        height: 11px;
+        text-align: left;
+        font: normal normal normal 12px/38px Hiragino Kaku Gothic ProN;
+        letter-spacing: 0px;
+        color: #555555;
+        margin-bottom: 25px;
+    }
+    .p1{
+        width: 98%;
+        height: 12px;
+        text-align: left;
+        font: normal normal normal 14px/13px Hiragino Kaku Gothic ProN;
+        letter-spacing: 0px;
+        color: #1B1B1B;
+    }
+    .p2{
+        width: 98%;
+        height: 11px;
+        text-align: left;
+        font: normal normal normal 12px/16px Hiragino Kaku Gothic ProN;
+        letter-spacing: 0px;
+        color: #1B1B1B;
+    }
+    .btn-text{
+        width: 100%;
+        height: 16px;
+        text-align: center;
+        font: normal normal normal 16px/38px Hiragino Kaku Gothic ProN;
+        letter-spacing: 0px;
+        color: #000000;
+    }
+    
+}
+
+

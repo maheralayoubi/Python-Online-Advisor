@@ -1,0 +1,581 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/styles_admin.css' %}">
+    <title>Lesson Managment</title>
+</head>
+
+<body id='admin'>
+    <header class="mt-5 ml-5">
+        <a href="#"><img src="{{ MEDIA_URL }}/media/logo_mobile.png" class="logo"></a>
+    </header>
+
+    <a href="{% url 'logout' %}" class="logout mt-2 d-block">ログアウト</a>
+
+    <div class="list-group list-group-horizontal ml-5 mt-5 w-75 navdiv">
+        <a class="list-group-item list-group-item-action ml-3 text-center" data-toggle="list" href="#lessonManagment"
+            role="tab">レッスン管理</a>
+        <a class="list-group-item list-group-item-action ml-3 text-center" data-toggle="list"
+            href="#instructorManagmentdiv" role="tab">講師管理
+        </a>
+        <a class="list-group-item list-group-item-action ml-3 text-center" data-toggle="list"
+            href="#studentManagmentdiv" role="tab">生徒管理
+        </a>
+        <a class="list-group-item list-group-item-action ml-3 text-center" data-toggle="list" href="#chatManagment"
+            role="tab">チャット管理
+        </a>
+        <a class="list-group-item list-group-item-action ml-3 text-center" data-toggle="list" href="#smallLessons"
+            role="tab">ちょこっと相談
+        </a>
+    </div>
+
+    <div class="tab-content mt-5">
+        <!-- lesson managment 3 tables -->
+        <div class="tab-pane " id="lessonManagment" role="tabpanel">
+            <div class="collapse">
+                <ul class="list-group list-group-horizontal-sm exportdiv ml-5">
+                    <li class="list-group-item list-group-item-action export pb">合計売り上げ
+                    </li>
+                    <li class="list-group-item export disabled">{{total_sales}}</li>
+                </ul>
+
+                <ul class="list-group list-group-horizontal-sm exportdiv mt-2 ml-5">
+                    <li class="list-group-item list-group-item-action exportsales">月別売り上げ
+                    </li>
+                    <li class="list-group-item exportsales disabled">{{monthly_sales}}</li>
+                </ul>
+            </div>
+
+
+            <div class="list-group list-group-horizontal lessonsdetails mt-3 w-75 ml-5">
+                <a class="list-group-item list-group-item-action" data-toggle="list" href="#completedLessonsdiv"
+                    role="tab" id="collabse">合計
+                </a>
+                <a class="list-group-item disabled">{{len_completed_lessons}}</a>
+                <a class="list-group-item list-group-item-action ml-5" data-toggle="list" href="#lessonsInProgressdiv"
+                    role="tab" id="d">開始中のレッスン</a>
+                <a class="list-group-item disabled"> {{len_inprogress_lessons}} </a>
+                <a class="list-group-item list-group-item-action ml-5" data-toggle="list" href="#lessonsToBeStarteddiv"
+                    role="tab">開始予定のレッスン
+                </a>
+                <a class="list-group-item disabled">{{len_tobe_started_lessons}}</a>
+            </div>
+
+            <div class="tab-content">
+                <!-- completed lesson table -->
+                <div class="tab-pane w-100" id="completedLessonsdiv" role="tabpanel">
+                    <table class="table table-striped" id=CompletedLessons>
+                        <thead>
+                            <tr>
+                                <th>日時
+                                </th>
+                                <th>レッスンタイトル
+                                </th>
+                                <th>講師名
+                                </th>
+                                <th>生徒名
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tbody>
+                            {% if completed_lessons %}
+                            {% for lesson in completed_lessons %}
+
+                            <tr class="completed_lessons">
+                                <td scope="row"><a href="{% url 'lesson_page' lesson.id %}"
+                                        class="anchor">{{lesson.Date}}</a></td>
+                                <td><a href="{% url 'lesson_page' lesson.id %}">{{lesson.title}}</a></td>
+                                <td><a href="{% url 'lesson_page' lesson.id %}">{{lesson.instructor.name}}</a></td>
+                                {% if lesson.student %}
+                                <td><a href="{% url 'lesson_page' lesson.id %}">{{lesson.student.name}}</a></td>
+                                {% else %}
+                                <td><a href="{% url 'lesson_page' lesson.id %}">まだ割り当てられていません</a></td>
+                                {% endif %}
+                            </tr>
+
+                            {% endfor %}
+                            {% endif %}
+                        </tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- lessons in progress table -->
+                <div class="tab-pane" id="lessonsInProgressdiv" role="tabpanel">
+                    <table class="table table-striped" id="lessonsInProgress">
+                        <thead>
+                            <tr>
+                                <th scope="col">日時
+                                </th>
+                                <th scope="col">レッスンタイトル
+                                </th>
+                                <th scope="col">講師名
+                                </th>
+                                <th scope="col">生徒名
+                                </th>
+                                <th scope="col">経過時間
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tbody>
+                            {% if inprogress_lessons %}
+                            {% for lesson in inprogress_lessons %}
+                            <tr>
+                                <td scope="row">{{lesson.Date}}</td>
+                                <td> <a href="{% url 'lesson_page' lesson.id %}"> {{lesson.title}} </a></td>
+                                <td><a href="{% url 'lesson_page' lesson.id %}">{{lesson.instructor.name}}</a></td>
+                                {% if lesson.student %}
+                                <td><a href="{% url 'lesson_page' lesson.id %}">{{lesson.student.name}}</a></td>
+                                {% else %}
+                                <td><a href="{% url 'lesson_page' lesson.id %}">まだ割り当てられていません</a></td>
+                                {% endif %}
+                                <td><a href="{% url 'lesson_page' lesson.id %}">time elapsed</a></td>
+
+                            </tr>
+                            {% endfor %}
+                            {% endif %}
+                        </tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- lessons to be started  -->
+                <div class="tab-pane" id="lessonsToBeStarteddiv" role="tabpanel">
+                    <table class="table table-striped" id="lessonsToBeStarted">
+                        <thead>
+                            <tr>
+                                <th>日時
+                                </th>
+                                <th>レッスンタイトル</th>
+                                <th>講師名
+                                </th>
+                                <th>生徒名
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if tobe_started_lessons %}
+                            {% for lesson in tobe_started_lessons %}
+                            <tr>
+                                <td scope="row">{{lesson.Date}}</td>
+                                <td> <a href="{% url 'lesson_page' lesson.id %}"> {{lesson.title}} </a></td>
+                                <td><a href="{% url 'lesson_page' lesson.id %}">{{lesson.instructor.name}}</a></td>
+                                {% if lesson.student %}
+                                <td><a href="{% url 'lesson_page' lesson.id %}">{{lesson.student.name}}</a></td>
+                                {% else %}
+                                <td><a href="{% url 'lesson_page' lesson.id %}">まだ割り当てられていません</a></td>
+                                {% endif %}
+                                <td> <a href="{% url 'delete_lesson' lesson.id %}"> &#9940; </a></td>
+                            </tr>
+                            {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane w-100 blockstyle" id="instructorManagmentdiv" role="tabpanel">
+            <input id="searchinstructor" class="search" type="text" placeholder="講師名検索エリア" aria-label="Search" onkeyup="searchInstructor()">
+
+
+
+            <table class="table table-striped ml-1" id="instructorManagment">
+                <thead>
+                    <tr>
+                        <th>講師名
+                        </th>
+                        <th>最終ログイン
+                        </th>
+                        <th>メールアドレス
+                        </th>
+                        <th>
+                            ブロック
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if instructors %}
+                    {% for ins in instructors %}
+                    <tr>
+                        <td> <a href="{% url 'instructor_page' ins.Id %}">{{ins.name}}</a></td>
+                        <td><a href="{% url 'instructor_page' ins.Id %}">{{ins.blocked}}</a></td>
+                        <td><a href="{% url 'instructor_page' ins.Id %}">{{ins.email}}</a></td>
+                        <td>
+                            <label class="switch">
+                                <a href="{% url 'block_instructor' ins.Id %}">
+                                    {% if ins.blocked %}
+                                    <input type="checkbox" checked>
+
+                                    {% else %}
+                                    <input type="checkbox">
+                                    {% endif %}
+                                    <span class="slider round"></span>
+                                </a>
+                            </label>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane blockstyle" id="studentManagmentdiv" role="tabpanel">
+            <input id="searchstudents" class="search" type="text" placeholder="生徒名検索エリア"
+                aria-label="Search" onkeyup="searchStudent()">
+            <table class="table table-striped ml-1" id='studentManagment'>
+                <thead>
+                    <tr>
+                        <th>生徒名
+                        </th>
+                        <th>最終ログイン
+                        </th>
+                        <th>メールアドレス
+                        </th>
+                        <th>ブロック
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if students %}
+                    {% for stu in students %}
+                    <tr>
+                        <td><a href="{% url 'student_page' stu.Id %}">{{stu.name}}</a></td>
+                        <td><a href="{% url 'student_page' stu.Id %}">{{stu.age}}</a></td>
+                        <td><a href="{% url 'student_page' stu.Id %}">{{stu.email}}</a></td>
+                        <td>
+                            <label class="switch">
+                                <a href="{% url 'block_student' stu.Id %}">
+                                    {% if stu.blocked %}
+                                    <input type="checkbox" checked>
+
+                                    {% else %}
+                                    <input type="checkbox">
+                                    {% endif %}
+                                    <span class="slider round"></span>
+                                </a>
+                            </label>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane " id="chatManagment" role="tabpanel">
+            <input id="searchboth" class="search" type="text" placeholder="講師、生徒名検索エリア"
+                aria-label="Search" onkeyup="searchBoth()">
+            <table class="table table-striped ml-1">
+                <thead>
+                    <tr>
+                        <th>生徒名
+                        </th>
+                        <th>講師名
+                        </th>
+                        <th>直近の時間
+                        </th>
+                        <th>最新のメッセージ
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody id="MessagesBody">
+                    {% for lesson in completed_lessons %}
+
+                    <tr class="Messages">
+                        <td class="hide lessonID">{{lesson.id}}</td>
+                        <td class="studentName"><a href="{% url 'stored_chats' lesson.id %}"
+                                class="msg text-dark">{{lesson.student.name}}</a></td>
+                        <td class="instructorName"><a href="{% url 'stored_chats' lesson.id %}"
+                                class="msg text-dark">{{lesson.instructor.name}}</a></td>
+                        <td class="time"><a href="{% url 'stored_chats' lesson.id %}" class="msg text-dark"></a></td>
+                        <td class="message"><a href="{% url 'stored_chats' lesson.id %}"
+                                class="msg text-dark">.......</a></td>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tab-pane" id="smallLessons" role="tabpanel">
+            <div class="collapse">
+                <ul class="list-group list-group-horizontal-sm exportdiv ml-5">
+                    <li class="list-group-item list-group-item-action export pb">合計売り上げ
+                    </li>
+                    <li class="list-group-item export disabled">987.645</li>
+                </ul>
+
+                <ul class="list-group list-group-horizontal-sm exportdiv mt-2 ml-5">
+                    <li class="list-group-item list-group-item-action exportsales">月別売り上げ
+                    </li>
+                    <li class="list-group-item exportsales disabled">987.645</li>
+                </ul>
+            </div>
+
+            <div class="list-group list-group-horizontal lessonsdetails mt-3 w-75 ml-5">
+                <a class="list-group-item list-group-item-action" data-toggle="list" href="#smallcompletedLessonsdiv"
+                    role="tab" id="smallLessonCollabse">合計
+                </a>
+                <a class="list-group-item disabled">987.645</a>
+                <a class="list-group-item list-group-item-action ml-5" data-toggle="list"
+                    href="#smalllessonsInProgressdiv" role="tab" id="smalld">開始中の
+                    レッスン
+                    </a>
+                <a class="list-group-item disabled">987.645</a>
+                <a class="list-group-item list-group-item-action ml-5" data-toggle="list"
+                    href="#smalllessonsToBeStarteddiv" role="tab">開始予定の
+                    レッスン
+                    </a>
+                <a class="list-group-item disabled">987.645</a>
+            </div>
+
+            <div class="tab-content">
+                <!-- completed lesson table -->
+                <div class="tab-pane w-100" id="smallcompletedLessonsdiv" role="tabpanel">
+                    <table class="table table-striped" id=smallCompletedLessons>
+                        <thead>
+                            <tr>
+                                <th>日時
+                                </th>
+                                <th>レッスンタイトル
+                                </th>
+                                <th>講師名
+                                </th>
+                                <th>生徒名
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td scope="row">1</td>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- lessons in progress table -->
+                <div class="tab-pane" id="smalllessonsInProgressdiv" role="tabpanel">
+                    <table class="table table-striped" id='smalllessonsInProgress'>
+                        <thead>
+                            <tr>
+                                <th scope="col">日時
+                                </th>
+                                <th scope="col">レッスンタイトル
+                                </th>
+                                <th scope="col">講師名
+                                </th>
+                                <th scope="col">生徒名
+                                </th>
+                                <th scope="col">経過時間
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td scope="row">1</td>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                                <td>something</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- lessons to be started  -->
+                <div class="tab-pane" id="smalllessonsToBeStarteddiv" role="tabpanel">
+                    <table class="table table-striped" id="smalllessonsToBeStarted">
+                        <thead>
+                            <tr>
+                                <th>日時
+                                </th>
+                                <th>レッスンタイトル
+                                </th>
+                                <th>講師名
+                                </th>
+                                <th>生徒名
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td scope="row">1</td>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+    <script src="https://media.twiliocdn.com/sdk/js/common/v0.1/twilio-common.min.js"></script>
+    <script src="https://media.twiliocdn.com/sdk/js/chat/v2.0/twilio-chat.min.js"></script>
+    <script src="{%static 'chat/scripts/messages.js'%}"></script>
+
+    <script>
+        // var lessonI = document.getElementsByClassName("lessonID");
+        // for (var i = 0; i < lessonI.length; i++) {
+        //     console.log(lessonI[i].innerHTML);
+        // }
+        document.getElementById('collabse').onclick = function () {
+            $('.collapse').collapse('toggle');
+        }
+
+        document.getElementById('d').onclick = function () {
+            $('.collapse').collapse('hide');
+        }
+
+
+
+        document.getElementById('smallLessonCollabse').onclick = function () {
+            $('.collapse').collapse('toggle');
+        }
+
+        document.getElementById('smalld').onclick = function () {
+            $('.collapse').collapse('hide');
+        }
+
+
+        // accessing instructor profile page when clicking
+        var smallCompletedLessons = document.getElementById('smallCompletedLessons').getElementsByTagName('tbody')[0];
+        var smalllessonsInProgress = document.getElementById('smalllessonsInProgress').getElementsByTagName('tbody')[0];
+        var smalllessonsToBeStarted = document.getElementById('smalllessonsToBeStarted').getElementsByTagName('tbody')[0];
+        for (var row of smallCompletedLessons.rows) {
+            (row.cells[1]).addEventListener('click', function () {
+                window.location.href = "{% url 'small_lesson_page' %}";
+            })
+        }
+
+        for (var row of smalllessonsInProgress.rows) {
+            (row.cells[1]).addEventListener('click', function () {
+                window.location.href = "{% url 'small_lesson_page' %}";
+            })
+        }
+
+        for (var row of smalllessonsToBeStarted.rows) {
+            (row.cells[1]).addEventListener('click', function () {
+                window.location.href = "{% url 'small_lesson_page' %}";
+            })
+        }
+
+        function searchStudent() {
+            var input = document.getElementById("searchstudents");
+            var filter = input.value.toUpperCase();
+
+            var myTable = document.getElementById('studentManagment');
+            var tr = myTable.getElementsByTagName('tr');
+
+            for (var i = 0; i < tr.length; i++) {
+                var td = tr[i].getElementsByTagName('td')[0];
+
+                if (td) {
+                    var textvalue = td.textContent || td.innerHTML;
+                    if (textvalue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    }
+                    else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        function searchInstructor() {
+            var input = document.getElementById("searchinstructor");
+            var filter = input.value.toUpperCase();
+
+            var myTable = document.getElementById('instructorManagment');
+            var tr = myTable.getElementsByTagName('tr');
+
+            for (var i = 0; i < tr.length; i++) {
+                var td = tr[i].getElementsByTagName('td')[0];
+
+                if (td) {
+                    var textvalue = td.textContent || td.innerHTML;
+                    if (textvalue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    }
+                    else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        function searchBoth() {
+            var input = document.getElementById("searchboth");
+            var filter = input.value.toUpperCase();
+
+            var myTable = document.getElementById('chatManagment');
+            var tr = myTable.getElementsByTagName('tr');
+
+            for (var i = 0; i < tr.length; i++) {
+                var td = tr[i].getElementsByTagName('td')[0];
+
+                if (td) {
+                    var textvalue = td.textContent || td.innerHTML;
+                    if (textvalue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    }
+                    else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+
+
+
+    </script>
+
+</body>
+
+</html>

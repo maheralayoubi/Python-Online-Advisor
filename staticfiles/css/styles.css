@@ -1,0 +1,174 @@
+body{
+    background-color: #F0EDE7;
+    padding-bottom: 2%;
+}
+#vl{
+    width: 1px;
+    height: 50;
+    background-color: #D1D3D4;
+    
+}
+
+.stepOff{
+    background-color: #D1D3D4;
+    border-radius: 40%;
+    width: 10%;
+}
+
+.stepOn{
+    background-color: orange;
+    border-radius: 40%;
+    width: 10%;
+}
+.image-container{
+    width: 100px;
+    min-height: 100px;
+    border: 2px solid #D1D3D4;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #D1D3D4;   
+}
+
+.personal_image{
+    display: none;
+    width: 100%;
+}
+
+#second{
+    display: none;
+}
+
+#third{
+    display: none;
+}
+
+/* advisors styling starts from here */
+
+.img-card{
+    min-width: 110px;
+    max-width: 110px;
+    min-height: 110px;
+    max-height: 110px;
+    border: 5px solid white;
+    box-shadow: 0px 0px 5px;
+}
+
+.btn-nav{
+    border-color: #ced4da;
+    border-radius: 0;
+}
+.img-nav{
+    min-width: 35px;
+    max-width: 35px;
+    min-height: 35px;
+    max-height: 35px;  
+    margin-left: 20px;
+    margin-top: 3px;
+}
+
+.rating {
+    overflow: hidden;
+    display: inline-block;
+}
+.rating-input {
+    float: right;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    margin: 0 0 0 -16px;
+    opacity: 0;
+}
+
+.rating:hover .rating-star:hover,
+.rating:hover .rating-star:hover ~ .rating-star,
+.rating-input:checked ~ .rating-star {
+    background-position: 0 0;
+}
+
+.rating-star,
+.rating:hover .rating-star {
+    position: relative;
+    display: block;
+    float: right;
+    width: 16px;
+    height: 16px;
+    background: url('https://www.everythingfrontend.com/samples/star-rating/star.png') 0 -16px;
+}
+
+/* lesson_reservation */
+.breadcrumb {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    list-style: none;
+    background-color: #F0EDE7;
+    border-radius: 0.25rem;
+}
+  
+.breadcrumb-item {
+    display: -ms-flexbox;
+    display: flex;
+    font-weight: bolder;
+}
+  
+.breadcrumb-item + .breadcrumb-item {
+    padding-left: 0.5rem;
+}
+  
+.breadcrumb-item + .breadcrumb-item::before {
+    display: inline-block;
+    padding-right: 0.5rem;
+    color: gray;
+    content: " ";
+}
+
+
+.breadcrumb-item a{
+    color: gray;
+    text-decoration-color: orange;
+}
+
+  
+.breadcrumb-item.active {
+    color: black;
+    text-decoration: underline;
+    text-decoration-color: orange;
+}
+
+.sepLine{
+    width: 1px;
+    height: 150px;
+    background-color: #D1D3D4;
+}
+
+.orgLine{
+    width: 2px;
+    height: 20px;
+}
+
+.img-card-lessRes{
+    min-width: 70px;
+    max-width: 70px;
+    min-height: 70px;
+    max-height: 70px;
+    
+}
+
+.starchecked {
+    color: orange;
+}
+
+/* lesson details */
+.img-details{
+    min-width: 30px;
+    max-width: 30px;
+    min-height: 30px;
+    max-height: 30px;
+}

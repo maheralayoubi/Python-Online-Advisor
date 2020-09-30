@@ -1,0 +1,246 @@
+body{
+    width: 100%;
+    height: 100%;
+    background: #F4F2F0 0% 0% no-repeat padding-box;
+}
+#cards{
+    margin-top: 20px;
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 1100px;
+    max-width: 1100px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+}
+#mycard{
+    width: 200px;
+    height: 270px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+}
+.img-card{
+    width: 124px;
+    height: 124px;
+    border: 5px solid white;
+    box-shadow: 0px 0px 5px;
+    border-radius: 50%;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 20px;
+}
+.card-title{
+    width: 180px;
+    height: 12px;
+    text-align: center;
+    font: normal normal normal 14px/21px Hiragino Kaku Gothic Pro;
+    letter-spacing: 0px;
+    color: black;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 10px;
+
+}
+.card-title:hover{
+    width: 180px;
+    height: 12px;
+    text-align: center;
+    font: normal normal normal 14px/21px Hiragino Kaku Gothic Pro;
+    letter-spacing: 0px;
+    color: black;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 10px;
+    text-decoration: none;
+
+}
+.ins-field{
+    width: 160px;
+    height: 26px;
+    background: #41B3CB 0% 0% no-repeat padding-box;
+    border-radius: 4px;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 12px;
+    
+}
+.ins-field-text{
+    text-align: center;
+    width: 140px;
+    font: normal normal normal 12px/15px Hiragino Kaku Gothic Pro;
+    letter-spacing: 0px;
+    color: #FFFFFF;
+    display: block;
+    margin: auto;
+    margin-top: 4px;
+}
+.ins_what_you_can_ask_for{
+    width: 140px;
+    height: 20px;
+    font: normal normal normal 12px/15px Hiragino Kaku Gothic Pro;
+    letter-spacing: 0px;
+    color: #41B3CB;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 10px;
+    text-align: center;
+}
+.stars{
+    width: 80px;
+    height: 10px;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: -20px;
+}
+.fa-star{
+    font-size: 10px;
+    color: #EFEFEF;
+}
+
+.starchecked {
+    color: #41B3CB;
+}
+.mobile-version-upper-nav{
+    display: none;
+}
+
+@media only screen and (max-width:640px){
+    body{
+        width: 100%;
+        background-color: #F4F2F0;
+        margin-right: auto;
+        margin-left: auto;
+        
+        
+    }
+    .web-version{
+        display: none;
+    }
+    .mobile-version-upper-nav{
+        display: block;
+        width: 100%;
+        height: 80px;
+        background-color: #FFFFFF;
+        border-bottom: 1px solid #B5B5B5;
+        padding-top: 15px;
+        right: 0;
+        
+    }
+    .mobile-version-upper-nav img{
+        margin-right: auto;
+        margin-left: auto;
+        display: block;
+    }
+
+    #cards{
+        margin-top: 20px;
+        margin-right: auto;
+        margin-left: auto;
+        max-width: 90%;
+        max-width: 90%;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        padding-bottom: 100px;
+        
+    }
+    #mycard{
+        width: 100%;
+        height: 270px;
+        background: #FFFFFF 0% 0% no-repeat padding-box;
+    }
+    .img-card{
+        min-width: 70%;
+        max-width: 70%;
+        min-height: 80%;
+        max-height: 80%;
+        border: 5px solid white;
+        box-shadow: 0px 0px 5px;
+        border-radius: 50%;
+        display: block;
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: 20px;
+    }
+    .card-title{
+        width: 100%;
+        height: 12px;
+        text-align: center;
+        font: normal normal normal 14px/21px Hiragino Kaku Gothic Pro;
+        letter-spacing: 0px;
+        color: black;
+        display: block;
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: 10px;
+    
+    }
+    .card-title:hover{
+        width: 100%;
+        height: 12px;
+        text-align: center;
+        font: normal normal normal 14px/21px Hiragino Kaku Gothic Pro;
+        letter-spacing: 0px;
+        color: black;
+        display: block;
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: 10px;
+        text-decoration: none;
+    
+    }
+    .ins-field{
+        width: 80%;
+        height: 26px;
+        background: #41B3CB 0% 0% no-repeat padding-box;
+        border-radius: 4px;
+        display: block;
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: 12px;
+        
+    }
+    .ins-field-text{
+        text-align: center;
+        width: 90%;
+        font: normal normal normal 12px/15px Hiragino Kaku Gothic Pro;
+        letter-spacing: 0px;
+        color: #FFFFFF;
+        display: block;
+        margin-top: 4px;
+    }
+    .ins_what_you_can_ask_for{
+        width: 80%;
+        height: 20px;
+        font: normal normal normal 12px/15px Hiragino Kaku Gothic Pro;
+        letter-spacing: 0px;
+        color: #41B3CB;
+        display: block;
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: 10px;
+        text-align: center;
+    }
+    .stars{
+        width: 42%;
+        height: 10px;
+        display: block;
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: -20px;
+    }
+    .fa-star{
+        font-size: 10px;
+        color: #EFEFEF;
+    }
+    
+    .starchecked {
+        color: #41B3CB;
+    }
+    
+}

@@ -1,0 +1,123 @@
+{% load static %}
+<html>
+<nav class="web-version">
+    {% for i in todays_session %}
+    <p class="timelesson h">{{i}}</p>
+    {% endfor %}
+
+    {% if request.session.user_type == "student" %}
+    <a href="{% url 'advisors_page' %}"><img src="{{ MEDIA_URL }}/media/logo_mobile.png" class="logo"></a>
+    {% elif request.session.user_type == "instructor" %}
+    <a href="{% url 'lesson_reservation' %}"> <img src="{{ MEDIA_URL }}/media/logo_mobile.png" class="logo"> </a>
+    {% elif request.session.user_type == "admin" %}
+    <a href="{% url 'admin_page' %}"> <img src="{{ MEDIA_URL }}/media/logo_mobile.png" class="logo"> </a>
+    {% endif %}
+    <input type="text" class="bg-search" placeholder="先生、またはレッスンを探す" id="searchbar">
+    
+    <i class="fa fa-search"></i>
+    {% if request.session.user_type == "student" %}
+    <a href="{% url 'advisors_page' %}"><i class='fas fa-book-open mt-1 ml-4' id="lessonGo"></i></a>
+    {% elif request.session.user_type == "instructor" %}
+    <a href="{% url 'lesson_reservation' %}"><i class='fas fa-book-open mt-1 ml-4' id="lessonGo"></i></a>
+    {% elif request.session.user_type == "admin" %}
+    <a href="{% url 'admin_page' %}"><i class='fas fa-book-open mt-1 ml-4' id="lessonGo"></i></a>
+    {% endif %}
+
+
+    <a  href="" id="chaticon"><i class="material-icons material">mail_outline</i></a>
+    {% for lesson in lessons %}
+    <!-- {% if lesson.student.Id == logged_user.Id or lesson.instructor.Id == logged_user.Id %} -->
+
+    <p class="hide" id="timestart">{{lesson.starting}}</p>
+
+    <!-- {% endif %} -->
+
+    {% endfor %}
+    {% if request.session.user_type == "instructor" %}
+    <a href="{% url 'profile' logged_user.Id %}"> <img src="{{ MEDIA_URL }}/media/{{logged_user.img}}"
+            class="img-profile-icon" alt="..."></a>
+    {% elif request.session.user_type == "student" %}
+    <a href="{% url 'student_profile' logged_user.Id %}"><img src="{{ MEDIA_URL }}/media/{{logged_user.img}}"
+            class="img-profile-icon" alt="..."></a>
+    {% endif %}
+</nav>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light resize-version">
+    {% for i in todays_session %}
+    <p class="timelesson h">{{i}}</p>
+    {% endfor %}
+    <p class="logo">
+        {% if request.session.user_type == "student" %}
+        <a href="{% url 'advisors_page' %}"> <img src="{{ MEDIA_URL }}/media/logo_mobile.png" class="logo"> </a>
+        {% elif request.session.user_type == "instructor" %}
+        <a href="{% url 'lesson_reservation' %}"> <img src="{{ MEDIA_URL }}/media/logo_mobile.png" class="logo"> </a>
+        {% elif request.session.user_type == "admin" %}
+        <a href="{% url 'admin_page' %}"> <img src="{{ MEDIA_URL }}/media/logo_mobile.png" class="logo"> </a>
+        {% endif %}
+    </p>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+        aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item">
+                {% if request.session.user_type == "student" %}
+                <a href="{% url 'advisors_page' %}"><i class='fas fa-book-open' id="lessonGo"></i></a>
+                {% elif request.session.user_type == "instructor" %}
+                <a href="{% url 'lesson_reservation' %}"><i class='fas fa-book-open' id="lessonGo"></i></a>
+                {% elif request.session.user_type == "admin" %}
+                <a href="{% url 'admin_page' %}"><i class='fas fa-book-open' id="lessonGo"></i></a>
+                {% endif %}
+            </li>
+            <li class="nav-item">
+                <a href="" id="chaticon1"><i class="material-icons material">mail_outline</i></a>
+            </li>
+            <li class="nav-item">
+                {% if request.session.user_type == "instructor" %}
+                <a href="{% url 'profile' logged_user.Id %}"> <img src="{{ MEDIA_URL }}/media/{{logged_user.img}}"
+                        class="img-profile-icon" alt="..."></a>
+                {% elif request.session.user_type == "student" %}
+                <a href="{% url 'student_profile' logged_user.Id %}"><img
+                        src="{{ MEDIA_URL }}/media/{{logged_user.img}}" class="img-profile-icon" alt="..."></a>
+                {% endif %}
+            </li>
+            <li class="nav-item">
+                <input type="text" class="bg-search" placeholder="先生、またはレッスンを探す" id="searchbarResizable">
+                
+                <i class="fa fa-search"></i>
+            </li>
+        </ul>
+    </div>
+
+</nav>
+
+
+<nav class="mobile-version">
+    <a href="{% url 'advisors_page' %}" class="nav_link">
+        <i class="fa fa-home nav_icon"></i>
+        <span class="nav_text">ホーム</span>
+    </a>
+    <a href="{% url 'lesson_reservation' %}" class="nav_link">
+        <i class='fas fa-book-open nav_icon'></i>
+        <span class="nav_text">レッスン</span>
+    </a>
+    <a href="" id="chaticon2" class="nav_link">
+        <i class="material-icons nav_icon">mail_outline</i>
+        <span class="nav_text">メッセージ</span>
+    </a>
+    {% if request.session.user_type == "instructor" %}
+    <a href="{% url 'profile' logged_user.Id %}" class="nav_link">
+        <img src="{{MEDIA_URL}}/media/{{logged_user.img}}" class="nav_icon">
+        <span class="nav_text">マイページ</span>
+    </a>
+    {% elif request.session.user_type == "student" %}
+    <a href="{% url 'student_profile' logged_user.Id %}" class="nav_link">
+        <img src="{{MEDIA_URL}}/media/{{logged_user.img}}" class="nav_icon">
+        <span class="nav_text">マイページ</span>
+    </a>
+    {% endif %}
+    
+</nav>
+
+</html>

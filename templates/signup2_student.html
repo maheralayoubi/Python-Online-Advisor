@@ -1,0 +1,144 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+    <!-- <link rel="stylesheet" href="{% static 'css/styles.css' %}"> -->
+    <link rel="stylesheet" href="{% static 'css/sign-up.css' %}">
+    <title>Sign-up</title>
+</head>
+
+<body>
+    <nav class="row web-version">
+        <p class="logo">
+            キャリアオンライン
+        </p>
+        <p class="mt-2">新規会員登録</p>
+    </nav>
+
+    <!-- fro mobile version -->
+    <div class="mobile-version">
+        <p class="p">新規会員登録</p>
+        <div class="d-flex flex-row">
+            <p class=><span class="glyphicon glyphicon-menu-left"></span></p>
+            <p class="g-text">もどる</p>
+        </div>
+
+    </div>
+
+
+    <div class="container">
+        <div class="row area-subheader justify-content-between">
+            <div class="stepOff">
+                <p class="tstep">Step1</p>
+            </div>
+            <i class="fa fa-caret-right"></i>
+            <div class="stepOn">
+                <p class="tstep"> Step2 </p>
+            </div>
+            <i class="fa fa-caret-right"></i>
+            <div class="stepOff">
+                <p class="tstep"> Step3 </p>
+            </div>
+        </div>
+
+
+        <div class="column ">
+            <h4 class="h4-step2">アカウント情報を入力してください</h4>
+            <form id="form2" class="container" action="{% url 'signup2_student' user_id %}" method="POST"
+                enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="column">
+                    <div class="d-flex flex-row something">
+                        <div class="all">
+                            <div class="area-thumbnail">
+                                <label>プロフィール写真</label>
+                                <div class="d-flex flex-row mt-2">
+                                    <div class="image-container" id="image-container">
+                                        <img src="" class="personal_image w-100 h-100">
+                                    </div>
+
+                                    <label class="input-file">
+                                        <input type="file" name="imgFile" id="inpFile" required>
+                                        <p class="input-file-text">画像をアップロードする</p>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="area-job mobile-area">
+                                <label>
+                                    キャッチフレーズ
+                                </label>
+                                <textarea name="catchphrase"  required></textarea>
+                            </div>
+                        </div>
+
+                        <div class="column">
+                            <div class="area-intro mobile-area">
+                                <label>自己紹介文</label>
+                                <textarea name="self-introduction"
+                                    required></textarea>
+                            </div>
+                            <div class="area-intro2 mobile-area">
+                                <label>相談できること(#を先に入力してください)</label>
+                                <textarea name="talkabout"  required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <button type="submit" class="bt-conte"><span class="btn-text">次へ</span></button>
+                        <a href="{% url 'signup1' %}" class="go-back-a">もどる</a>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+        <script>
+            const inpFile = document.getElementById('inpFile');
+            const previewContainer = document.getElementById('image-container');
+            const personalImage = previewContainer.querySelector('.personal_image')
+
+
+            inpFile.addEventListener('change', function () {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+
+                    personalImage.style.display = "block";
+
+                    reader.addEventListener('load', function () {
+                        personalImage.setAttribute("src", this.result);
+                    });
+                    reader.readAsDataURL(file);
+                }
+            })
+
+       
+        </script>
+</body>
+
+</html>

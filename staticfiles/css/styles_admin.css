@@ -1,0 +1,230 @@
+body{
+    background-color: #d3d3d3;
+}
+
+
+
+.navdiv .list-group-item:first-child{
+    border: 2px solid gray;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+
+
+}
+.navdiv .list-group-item:last-child{
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+
+}
+
+.list-group-horizontal > .list-group-item + .list-group-item{
+    border: 2px solid gray;
+}
+
+.export{
+    width: 150px;
+    text-align: center;
+    border: 2px solid gray;
+    display: block;
+    
+}
+
+.exportdiv .list-group-item:first-child{
+    border: 2px solid gray;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    border: 2px solid gray;
+
+}
+.exportdiv .list-group-item:last-child{
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border: 2px solid gray;
+    margin-top: -1px;
+}
+
+.exportsales{
+    width: 220px;
+    border: 2px solid gray;
+    text-align: center;
+    
+}
+
+.lessonsdetails .list-group-item:first-child{
+    border: 2px solid gray;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    text-align: center;
+    font-size: 13px;
+    font-weight: bolder;
+    line-height: 15px;
+    height: 40px;
+    min-width: 150px;
+    padding: 9px 1px 5px 1px;
+}
+.lessonsdetails .list-group-item:last-child{
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border: 2px solid gray;
+    border-left: 1px solid gray;
+    text-align: center;
+    font-size: 13px;
+    font-weight: bolder;
+    line-height: 10px;
+    height: 40px;
+    min-width: 150px;
+    padding: 12px 25px 5px 25px;
+}
+
+.lessonsdetails .list-group-item:nth-child(2){
+    border: 2px solid gray;
+    border-left: 1px solid gray;
+    text-align: center;
+    font-size: 13px;
+    font-weight: bolder;
+    line-height: 10px;
+    height: 40px;
+    min-width: 150px;
+    padding: 12px 25px 5px 25px;
+}
+.lessonsdetails .list-group-item:nth-child(3){
+    border: 2px solid gray;
+    text-align: center;
+    font-size: 13px;
+    font-weight: bolder;
+    line-height: 10px;
+    height: 40px;
+    min-width: 150px;
+    padding: 11px 1px 5px 1px;
+}
+.lessonsdetails .list-group-item:nth-child(4){
+    border: 2px solid gray;
+    border-left: 1px solid gray;
+    text-align: center;
+    font-size: 13px;
+    font-weight: bolder;
+    line-height: 10px;
+    height: 40px;
+    padding: 12px 25px 5px 25px;
+  
+}
+.lessonsdetails .list-group-item:nth-child(5){
+    border: 2px solid gray;
+    text-align: center;
+    font-size: 13px;
+    font-weight: bolder;
+    line-height: 10px;
+    height: 40px;
+    min-width: 150px;
+    padding: 11px 1px 5px 1px;
+}
+
+.styleFirst{
+    border: 2px solid gray;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    text-align: center;
+    font-size: 13px;
+    font-weight: bolder;
+    line-height: 15px;
+    height: 40px;
+    min-width: 150px;
+    padding: 9px 1px 5px 1px;
+}
+
+img{
+    width: 150px;
+    height: 150px;   
+}
+
+.blockstyle td:last-child{
+    margin-left: 30px;
+    width: 5px;
+
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  
+  .switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: gray;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+.search{
+    display: block;
+    width: 500px;
+    height: 40px;
+    margin: auto;
+    margin-bottom: 20px;
+    border: 2px solid gray;
+}
+
+.switchh{
+    position: absolute;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    right: 0;
+    
+}
+
+.switchh input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+

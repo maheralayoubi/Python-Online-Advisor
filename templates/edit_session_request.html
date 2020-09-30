@@ -1,0 +1,638 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+
+
+    <link rel="stylesheet" href="{% static 'css/jquery.datetimepicker.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/request_session.css' %}">
+    <title>Lesson Reservation</title>
+</head>
+
+<body>
+    {% include "navbar.html" %}
+    <!-- COUNTDOWN AND RATING MODAL -->
+    <div class="modal" id="myModal" data-backdrop="static" data-keyboard="false" tabindex="-1">
+
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <img src="{{MEDIA_URL}}/media/Outline.svg" class="img-modal">
+                    <p class="modal-text">レッスン開始まで1分前です</p>
+                    <p class="modal-timer" id="timer"></p>
+                    <button type="button" class="modal-btn" id="modal-btn"><a href="{% url 'chat' %}" cladd="modal-btn">
+                            <span class="text-modal-btn">レッスンを開始 </span></a></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="rating" data-backdrop="static" data-keyboard="false" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <img src="{{MEDIA_URL}}/media/942191.svg" class="img-modal">
+                    <p class="modal-text">レッスン開始が終了しました 今回のレッスンはいかがでしたか？</p>
+                    <div class="rating-container">
+                        <form class="rating" method="POST" action="{% url 'rate' %}">
+                            {% csrf_token %}
+                            <input class="h" id="lessonidd" name="lesson_id"></input>
+                            <label>
+                                <input type="submit" name="1" value="1" />
+                                <span class="icon">★</span>
+                            </label>
+                            <label>
+                                <input type="submit" name="2" value="2" />
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                            </label>
+                            <label>
+                                <input type="submit" name="3" value="3" />
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                            </label>
+                            <label>
+                                <input type="submit" name="4" value="4" />
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                            </label>
+                            <label>
+                                <input type="submit" name="5" value="5" />
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                                <span class="icon">★</span>
+                            </label>
+                        </form>
+                    </div>
+                    <a href="#" class="close" data-dismiss="modal">閉じる</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="mobile-version-upper-nav">
+        <img src="{{MEDIA_URL}}/media/logo_mobile.png">
+    </div>
+    {% if messages %}<ul class="messages">
+        {% for message in messages %}
+        <b>
+            <h5 style="color: red; margin-top: 10px;" {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+                {{ message }}
+            </h5>
+        </b>
+        {% endfor %}</ul>
+    {% endif %}
+
+
+
+
+    <form id="request-session-widget" method="POST" action="{% url 'edit_session_request' wf.id %}">
+        {% csrf_token %}
+        <h5>{{lesson.title}}</h5>
+        <div class="option">
+            <p class="mt-1">候補日1</p>
+            <input type="text" class="form-control w-25 border rounded ml-2" id="picker1" name="date1" required>
+            <select class="custom-select w-25 ml-2" id="inputGroupSelect02" name="start-hour1" required>
+                <option selected>時
+
+                </option>
+                <option value="0">0時</option>
+                <option value="1">1時</option>
+                <option value="2">2時</option>
+                <option value="3">3時</option>
+                <option value="4">4時</option>
+                <option value="5">5時</option>
+                <option value="6">6時</option>
+                <option value="7">7時</option>
+                <option value="8">8時</option>
+                <option value="9">9時</option>
+                <option value="10">10時</option>
+                <option value="11">11時</option>
+                <option value="12">12時</option>
+                <option value="13">13時</option>
+                <option value="14">14時</option>
+                <option value="15">15時</option>
+                <option value="16">16時</option>
+                <option value="17">17時</option>
+                <option value="18">18時</option>
+                <option value="19">19時</option>
+                <option value="20">20時</option>
+                <option value="21">21時</option>
+                <option value="22">22時</option>
+                <option value="23">23時</option>
+            </select>
+            <select class="custom-select w-25 ml-2" id="inputGroupSelect02" name="start-min1" required>
+                <option selected>分
+
+                </option>
+                <option value="00">00分</option>
+                <option value="01">01分</option>
+                <option value="02">02分</option>
+                <option value="03">03分</option>
+                <option value="04">04分</option>
+                <option value="05">05分</option>
+                <option value="06">06分</option>
+                <option value="07">07分</option>
+                <option value="08">08分</option>
+                <option value="09">09分</option>
+                <option value="10">10分</option>
+                <option value="11">11分</option>
+                <option value="12">12分</option>
+                <option value="13">13分</option>
+                <option value="14">14分</option>
+                <option value="15">15分</option>
+                <option value="16">16分</option>
+                <option value="17">17分</option>
+                <option value="18">18分</option>
+                <option value="19">19分</option>
+                <option value="20">20分</option>
+                <option value="21">21分</option>
+                <option value="22">22分</option>
+                <option value="23">23分</option>
+                <option value="24">24分</option>
+                <option value="25">25分</option>
+                <option value="26">26分</option>
+                <option value="27">27分</option>
+                <option value="28">28分</option>
+                <option value="29">29分</option>
+                <option value="30">30分</option>
+                <option value="31">31分</option>
+                <option value="32">32分</option>
+                <option value="33">33分</option>
+                <option value="34">34分</option>
+                <option value="35">35分</option>
+                <option value="36">36分</option>
+                <option value="37">37分</option>
+                <option value="38">38分</option>
+                <option value="39">39分</option>
+                <option value="40">40分</option>
+                <option value="41">41分</option>
+                <option value="42">42分</option>
+                <option value="43">43分</option>
+                <option value="44">44分</option>
+                <option value="45">45分</option>
+                <option value="46">46分</option>
+                <option value="47">47分</option>
+                <option value="48">48分</option>
+                <option value="49">49分</option>
+                <option value="50">50分</option>
+                <option value="51">51分</option>
+                <option value="52">52分</option>
+                <option value="53">53分</option>
+                <option value="54">54分</option>
+                <option value="55">55分</option>
+                <option value="56">56分</option>
+                <option value="57">57分</option>
+                <option value="58">58分</option>
+                <option value="59">59分</option>
+                <option value="60">60分</option>
+            </select>
+        </div>
+        <div class="option">
+            <p class="mt-1">候補日2</p>
+            <input type="text" class="form-control w-25 border rounded ml-2" id="picker2" name="date2">
+            <select class="custom-select w-25 ml-2" id="inputGroupSelect02" name="start-hour2">
+                <option selected>時
+
+                </option>
+                <option value="0">0時</option>
+                <option value="1">1時</option>
+                <option value="2">2時</option>
+                <option value="3">3時</option>
+                <option value="4">4時</option>
+                <option value="5">5時</option>
+                <option value="6">6時</option>
+                <option value="7">7時</option>
+                <option value="8">8時</option>
+                <option value="9">9時</option>
+                <option value="10">10時</option>
+                <option value="11">11時</option>
+                <option value="12">12時</option>
+                <option value="13">13時</option>
+                <option value="14">14時</option>
+                <option value="15">15時</option>
+                <option value="16">16時</option>
+                <option value="17">17時</option>
+                <option value="18">18時</option>
+                <option value="19">19時</option>
+                <option value="20">20時</option>
+                <option value="21">21時</option>
+                <option value="22">22時</option>
+                <option value="23">23時</option>
+            </select>
+            <select class="custom-select w-25 ml-2" id="inputGroupSelect02" name="start-min2">
+                <option selected>分
+                    <!--minute-->
+                </option>
+                <option value="00">00分</option>
+                <option value="01">01分</option>
+                <option value="02">02分</option>
+                <option value="03">03分</option>
+                <option value="04">04分</option>
+                <option value="05">05分</option>
+                <option value="06">06分</option>
+                <option value="07">07分</option>
+                <option value="08">08分</option>
+                <option value="09">09分</option>
+                <option value="10">10分</option>
+                <option value="11">11分</option>
+                <option value="12">12分</option>
+                <option value="13">13分</option>
+                <option value="14">14分</option>
+                <option value="15">15分</option>
+                <option value="16">16分</option>
+                <option value="17">17分</option>
+                <option value="18">18分</option>
+                <option value="19">19分</option>
+                <option value="20">20分</option>
+                <option value="21">21分</option>
+                <option value="22">22分</option>
+                <option value="23">23分</option>
+                <option value="24">24分</option>
+                <option value="25">25分</option>
+                <option value="26">26分</option>
+                <option value="27">27分</option>
+                <option value="28">28分</option>
+                <option value="29">29分</option>
+                <option value="30">30分</option>
+                <option value="31">31分</option>
+                <option value="32">32分</option>
+                <option value="33">33分</option>
+                <option value="34">34分</option>
+                <option value="35">35分</option>
+                <option value="36">36分</option>
+                <option value="37">37分</option>
+                <option value="38">38分</option>
+                <option value="39">39分</option>
+                <option value="40">40分</option>
+                <option value="41">41分</option>
+                <option value="42">42分</option>
+                <option value="43">43分</option>
+                <option value="44">44分</option>
+                <option value="45">45分</option>
+                <option value="46">46分</option>
+                <option value="47">47分</option>
+                <option value="48">48分</option>
+                <option value="49">49分</option>
+                <option value="50">50分</option>
+                <option value="51">51分</option>
+                <option value="52">52分</option>
+                <option value="53">53分</option>
+                <option value="54">54分</option>
+                <option value="55">55分</option>
+                <option value="56">56分</option>
+                <option value="57">57分</option>
+                <option value="58">58分</option>
+                <option value="59">59分</option>
+                <option value="60">60分</option>
+            </select>
+        </div>
+        <div class="option">
+            <p class="mt-1">候補日3</p>
+            <input type="text" class="form-control w-25 border rounded ml-2" id="picker3" name="date3">
+            <select class="custom-select w-25 ml-2" id="inputGroupSelect02" name="start-hour3">
+                <option selected>時
+                    <!--oclock-->
+                </option>
+                <option value="0">0時</option>
+                <option value="1">1時</option>
+                <option value="2">2時</option>
+                <option value="3">3時</option>
+                <option value="4">4時</option>
+                <option value="5">5時</option>
+                <option value="6">6時</option>
+                <option value="7">7時</option>
+                <option value="8">8時</option>
+                <option value="9">9時</option>
+                <option value="10">10時</option>
+                <option value="11">11時</option>
+                <option value="12">12時</option>
+                <option value="13">13時</option>
+                <option value="14">14時</option>
+                <option value="15">15時</option>
+                <option value="16">16時</option>
+                <option value="17">17時</option>
+                <option value="18">18時</option>
+                <option value="19">19時</option>
+                <option value="20">20時</option>
+                <option value="21">21時</option>
+                <option value="22">22時</option>
+                <option value="23">23時</option>
+            </select>
+            <select class="custom-select w-25 ml-2" id="inputGroupSelect02" name="start-min3">
+                <option selected>分
+                    <!--minute-->
+                </option>
+                <option value="00">00分</option>
+                <option value="01">01分</option>
+                <option value="02">02分</option>
+                <option value="03">03分</option>
+                <option value="04">04分</option>
+                <option value="05">05分</option>
+                <option value="06">06分</option>
+                <option value="07">07分</option>
+                <option value="08">08分</option>
+                <option value="09">09分</option>
+                <option value="10">10分</option>
+                <option value="11">11分</option>
+                <option value="12">12分</option>
+                <option value="13">13分</option>
+                <option value="14">14分</option>
+                <option value="15">15分</option>
+                <option value="16">16分</option>
+                <option value="17">17分</option>
+                <option value="18">18分</option>
+                <option value="19">19分</option>
+                <option value="20">20分</option>
+                <option value="21">21分</option>
+                <option value="22">22分</option>
+                <option value="23">23分</option>
+                <option value="24">24分</option>
+                <option value="25">25分</option>
+                <option value="26">26分</option>
+                <option value="27">27分</option>
+                <option value="28">28分</option>
+                <option value="29">29分</option>
+                <option value="30">30分</option>
+                <option value="31">31分</option>
+                <option value="32">32分</option>
+                <option value="33">33分</option>
+                <option value="34">34分</option>
+                <option value="35">35分</option>
+                <option value="36">36分</option>
+                <option value="37">37分</option>
+                <option value="38">38分</option>
+                <option value="39">39分</option>
+                <option value="40">40分</option>
+                <option value="41">41分</option>
+                <option value="42">42分</option>
+                <option value="43">43分</option>
+                <option value="44">44分</option>
+                <option value="45">45分</option>
+                <option value="46">46分</option>
+                <option value="47">47分</option>
+                <option value="48">48分</option>
+                <option value="49">49分</option>
+                <option value="50">50分</option>
+                <option value="51">51分</option>
+                <option value="52">52分</option>
+                <option value="53">53分</option>
+                <option value="54">54分</option>
+                <option value="55">55分</option>
+                <option value="56">56分</option>
+                <option value="57">57分</option>
+                <option value="58">58分</option>
+                <option value="59">59分</option>
+                <option value="60">60分</option>
+            </select>
+        </div>
+        <button type="submit" class="btn-request" id="request-lesson"><span
+                class="btn-request-text">レッスンをリクエストする</span></button>
+    </form>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+    <script src="{% static 'js/jquery.datetimepicker.full.min.js' %}"></script>
+    <script>
+
+        var card = document.getElementsByClassName("lessonCard");
+
+        for (var i = 0; i < card.length; i++) {
+            let inside = card[i].getElementsByClassName("inside");
+
+            let clic = inside[0].getElementsByClassName("t");
+            let left = inside[0].getElementsByClassName("left");
+            let right = inside[0].getElementsByClassName("right");
+            if (i % 2 == 0) {
+                clic[0].addEventListener('click', function () {
+                    $(left[0]).collapse('toggle');
+                    // console.log(left[0]);
+                })
+            }
+            else {
+                clic[0].addEventListener('click', function () {
+                    $(right[0]).collapse('toggle');
+                })
+            }
+        }
+
+        $("#picker1").datetimepicker({
+            timepicker: false,
+            datepicker: true,
+            format: 'Y-m-d',
+            weeks: true
+        });
+        $("#picker2").datetimepicker({
+            timepicker: false,
+            datepicker: true,
+            format: 'Y-m-d',
+            weeks: true
+        });
+        $("#picker3").datetimepicker({
+            timepicker: false,
+            datepicker: true,
+            format: 'Y-m-d',
+            weeks: true
+        });
+        function showWidget() {
+            var elmnt = document.getElementById('request-session-widget');
+            elmnt.style.visibility = "visible";
+        }
+
+        var startsession = document.getElementById("modal-btn");
+
+        var ti = document.getElementsByClassName("timelesson");
+        var lessonhour;
+        var lessonMinute;
+        var lhourparse;
+        var lminuteparse;
+
+
+        var lessonhour1;
+        var lessonMinute1;
+        var lhourparse1;
+        var lminuteparse1;
+        var NEXTlessonhour;
+        var NEXTlessonMinute;
+        var NEXTlhourparse;
+        var NEXTlminuteparse;
+        var idd;
+        var idparse
+        var lsidd = document.getElementById("lessonidd");
+        for (var i = 0; i < ti.length - 1; i++) {
+            lessonhour1 = ti[i].innerHTML.slice(13, 16);
+            lessonMinute1 = ti[i].innerHTML.slice(17, 20);
+
+
+            lhourparse1 = parseInt(lessonhour1, 10);
+            lminuteparse1 = parseInt(lessonMinute1, 10);
+
+
+            var NEXTlessonhour = ti[i + 1].innerHTML.slice(13, 16);
+            var NEXTlessonMinute = ti[i + 1].innerHTML.slice(17, 20);
+            var NEXTlhourparse = parseInt(NEXTlessonhour, 10);
+            var NEXTlminuteparse = parseInt(NEXTlessonMinute, 10);
+
+            var lastless = ti[ti.length - 1].innerHTML.slice(13, 16);
+            var lstparse = parseInt(lastless, 10);
+
+
+            idd = ti[i].innerHTML.slice(20, 30);
+            var idparse = parseInt(idd, 10);
+
+            var today = new Date();
+            var hour = today.getHours();
+            var minute = today.getMinutes();
+
+            if ((hour > lhourparse1 + 1 && hour < NEXTlhourparse) || hour > lstparse + 1) {
+                lsidd.innerHTML = idparse;
+            }
+            else {
+                idd.innerHTML = "";
+            }
+
+
+        }
+
+        //cuntdown modal
+        var beforestartsession = setInterval(function () {
+
+            for (var i = 0; i < ti.length; i++) {
+                // console.log(ti[i])
+                lessonhour = ti[i].innerHTML.slice(13, 16);
+                lessonMinute = ti[i].innerHTML.slice(17, 20);
+                lhourparse = parseInt(lessonhour, 10);
+                lminuteparse = parseInt(lessonMinute, 10);
+                // console.log(lminuteparse);
+
+                var h = lhourparse;
+                var m = lminuteparse;
+
+                //current time
+                var today = new Date();
+                var hour = today.getHours();
+                // console.log(hour);
+                var minute = today.getMinutes();
+                var seconds = today.getSeconds();
+                if(hour < h+1 || ( hour = h+1 && minute < m)){
+                    document.getElementById("chaticon").href = "{% url 'chat' %}";
+                    document.getElementById("chaticon1").href = "{% url 'chat' %}";
+                    document.getElementById("chaticon2").href = "{% url 'chat' %}";
+                    console.log(h);
+                }
+                else if(hour == h && minute == m){
+                    document.getElementById("chaticon").href = "{% url 'chat' %}";
+                    document.getElementById("chaticon1").href = "{% url 'chat' %}";
+                    document.getElementById("chatico2").href = "{% url 'chat' %}";
+                }
+                else{
+                    document.getElementById("chaticon").href = "";
+                    document.getElementById("chaticon1").href = "";
+                    document.getElementById("chaticon2").href = "";
+                }
+                if (hour == h && minute == m) {
+                    $("#myModal").modal("show");
+                    startsession.disabled = true;
+                    clearInterval(beforestartsession);
+                    if (seconds > 0) {
+                        var sec = 60 - seconds;
+                        countdown(sec);
+                    }
+                    else if (seconds == 0) {
+                        countdown(60);
+                    }
+
+                }
+            }
+            startsession.disabled = false;
+
+        }, 1000);
+
+        //rating modal
+        var ratingmodal = setInterval(function () {
+            //ending time lesson
+            for (var i = 0; i < ti.length; i++) {
+                lessonhour = ti[i].innerHTML.slice(13, 16);
+                lessonMinute = ti[i].innerHTML.slice(17, 20);
+                lhourparse = parseInt(lessonhour, 10);
+                lminuteparse = parseInt(lessonMinute, 10);
+
+
+                var h = lhourparse + 1;
+                var min = lminuteparse;
+                var today = new Date();
+                var hour = today.getHours();
+                var minute = today.getMinutes();
+                if (h == hour && min == minute) {
+                    $('#rating').modal('show');
+                    $('#myModal').modal('hide');
+
+                }
+            }
+        }, 1000);
+
+
+        function countdown(sec) {
+            var timer = document.getElementById("timer");
+            var counter = 0;
+            var timeleft = sec;
+            var time = convertSeconds(timeleft - counter);
+            timer.innerHTML = convertSeconds(timeleft - counter);
+            var internal = setInterval(function () {
+                counter++;
+                timer.innerHTML = convertSeconds(timeleft - counter);
+                if (counter === timeleft) {
+                    clearInterval(internal);
+                }
+            }, 1000);
+        }
+
+        function convertSeconds(s) {
+            var min = Math.floor(s / 60);
+            var sec = s % 60;
+            var minformat;
+            var secformat;
+            if (min < 10) {
+                minformat = ("0" + min).slice(-2);
+            }
+            else {
+                minformat = min;
+            }
+            if (sec < 10) {
+                secformat = ("0" + sec).slice(-2);
+            }
+            else {
+                secformat = sec;
+            }
+            return minformat + ":" + secformat;
+        }
+
+    </script>
+
+</body>
+
+</html>

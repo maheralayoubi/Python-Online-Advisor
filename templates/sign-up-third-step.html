@@ -1,0 +1,97 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- <link rel="stylesheet" href="{% static 'css/styles.css' %}"> -->
+    <link rel="stylesheet" href="{% static 'css/sign-up.css' %}">
+    <title>Sign-up</title>
+</head>
+
+<body>
+    <nav class="row web-version">
+        <img src="{{ MEDIA_URL }}/media/logo_mobile.png" class="logo">
+        <p class="mt-2">新規会員登録</p>
+    </nav>
+
+    <!-- fro mobile version -->
+    <div class="mobile-version">
+        <p class="p">新規会員登録</p>
+        <div class="d-flex flex-row">
+            <p class=><span class="glyphicon glyphicon-menu-left"></span></p>
+            <p class="g-text">もどる</p>
+        </div>
+
+    </div>
+
+    <div class="contaner">
+        <div class="row area-subheader justify-content-between">
+            <div class="stepOff">
+                <p class="tstep">Step1</p>
+            </div>
+            <i class="fa fa-caret-right"></i>
+            <div class="stepOff">
+                <p class="tstep"> Step2 </p>
+            </div>
+            <i class="fa fa-caret-right"></i>
+            <div class="stepOn">
+                <p class="tstep"> Step3 </p>
+            </div>
+        </div>
+
+        <h4 class="h4-thirdstep">利用規約</h4>
+
+        <form id="form3" action="{% url 'signup3' user_id %}" method="POST" class="container">
+            {% csrf_token %}
+
+            <div readonly class="text-justify text-center textarea">
+                <p class="textareatitle">利用規約</p>
+                <p class="text-justify text-center textareatext">利用規約が入ります。利用規約が入ります。利用規約が入ります。利用規約が入ります。
+                    このエリアのなかでスクロールさせます。 <br>利用規約が入ります。利用規約が入ります。
+                    利用規約が入ります。利用規約が入ります。 このエリアのなかでスクロールさせます。<br>
+                    利用規約が入ります。利用規約が入ります。利用規約が入ります。利用規約が入ります。
+                    このエリアのなかでスクロールさせます。<br> 利用規約が入ります。利用規約が入ります。
+                    利用規約が入ります。利用規約が入ります。 このエリアのなかでスクロールさせます。<br>
+                    利用規約が入ります。利用規約が入ります。利用規約が入ります。利用規約が入ります。
+                    このエリアのなかでスクロールさせます。<br>
+                </p>
+            </div>
+            <div class="area-terms-accept d-flex flex-row">
+                <input type="checkbox" id="accept-terms" name="accept-terms" required>
+                <label>利用規約に同意する</label>
+            </div>
+
+            <div class="d-flex flex-column">
+                <button type="submit" class="terms-btn"><span class="terms-btn-text">サービスを開始する</span></button>
+                <a href="{% url 'signup2' user_id %}" class="go-back-a">もどる</a>
+            </div>
+
+        </form>
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>

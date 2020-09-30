@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="{% static 'css/styles.css' %}"> -->
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <!-- <link href="{% static 'fonts/hiragino-kaku-gothic-pron-w3.otf' %}" rel="stylesheet" media="screen"> -->
+    <title>Log In</title>
+</head>
+
+<body>
+    <nav class="row">
+        <img src="{{ MEDIA_URL }}/media/logo_mobile.png" class="logo">
+        <p class="mt-2">ログイン</p>
+    </nav>
+    <!-- fro mobile version -->
+    <img src="{{ MEDIA_URL }}/media/logo_mobile.png" class="logo-mobile">
+
+    <div class="container">
+        <div class="column area-login">
+            <p class="text1">
+                会員の方はこちら
+            </p>
+            {% if messages %}<ul class="messages">
+                {% for message in messages %}
+                <b>
+                    <li style="color: red;" {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}
+                    </li>
+                </b>
+                {% endfor %}</ul>
+            {% endif %}
+
+            <form id="logInform" method="POST" action="{% url 'mylogin' %}" class="container">
+                {% csrf_token %}
+                
+                <div class="column info">
+                    <label>メールアドレス</label>
+                    <input type="email" class="in" name="inputemail" id="inputEmail" placeholder="入力してください"
+                        required autofocus>
+                    <div class="invalid-feedback">
+                        Valid E-mail address is required.
+                    </div>
+                </div>
+                <div class="column info">
+                    <label>パスワード</label>
+                    <input type="password" name="inputpassword" id="inputpassword" class="in"
+                        placeholder="入力してください" required>
+                    <div class="invalid-feedback">
+                        Valid password is required.
+                    </div>
+                </div>
+                <div class="column info">
+                    <button type="submit" class="bg-btn"><span class="btn-text">ログインする</span></button>        
+                </div>
+                <div>
+                    <a href="{% url 'resetPass' %}">パスワードをお忘れの方はこちら</a>
+
+                </div>
+            </form>
+        </div>
+
+        <div class="vertical ml-4"></div>
+        <div class="column area-new ml-4">
+            <p class="p1">
+                はじめての方はこちら
+            </p>
+            <p class="p2">
+                はじめて利用する方は、下にあるボタンより会員登録してください。
+            </p>
+            <button type="button" id="Sign-up"><span class="btn-text">新規会員登録</span></button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script>
+        document.getElementById("Sign-up").onclick = function () {
+            window.location.href = "{% url 'signup1' %}"
+        }
+    </script>
+
+</html>

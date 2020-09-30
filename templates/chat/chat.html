@@ -1,0 +1,269 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link rel="shortcut icon" href="//www.twilio.com/marketing/bundles/marketing/img/favicons/favicon.ico">
+    <link rel="stylesheet" href="{% static 'css/jquery.datetimepicker.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Chat Window </title>
+</head>
+
+
+<body onload="focus();">
+    {% include 'navbar.html' %}
+    <div class="mobile-version-upper-nav">
+        <img src="{{MEDIA_URL}}/media/logo_mobile.png">
+    </div>
+
+    <p id="lesson_student" hidden>{{lesson.student.name}}</p>
+    <p id="lesson_ins" hidden>{{lesson.instructor.id}}</p>
+    <p class="position-absolute " id='timeHour'>{{todays_session.3}}</p>
+    <p class="position-absolute " id='timeMin'>{{todays_session.4}}</p>
+
+    <div class="loader-wrapper">
+        <span class="loader"></span>
+        <p class="loading-text">Loading Messages ...</p>
+    </div>
+
+    <div class=" d-flex flex-row make-col">
+        <div id="rooms" class="d-flex flex-column rooms">
+            {% for lesson in user_lessons %}
+            <div class="single-room chatroom">
+                <a href="#" class="rooms-anchor" aria-disabled="true">
+                    <div class="d-flex flex-row namee">
+                        <div class="title-bar"></div>
+                        <p class="room-details lTitle ml-1">{{lesson.title}}</p>
+                        <div class="timecontainer">
+                            <!-- <div class="orgcircle h"></div> -->
+                            <div class="msgTime" id={{lesson.id}}></div>
+                        </div>
+
+                        <p class="h id">{{lesson.id}}</p>
+
+                    </div>
+                    <p class="room-details lessontimingroom">{{lesson.date_to_display}}: {{lesson.starting}} ~
+                        {{ lesson.ending }}
+                    </p>
+                    {% if request.session.user_type == "student" %}
+                    <p class="room-details">学生: <span>
+                            <img src=" {{MEDIA_URL}}/media/{{lesson.instructor.img}} "
+                                class="img-room-user rounded-circle ml-1 mr-1 mb-1" alt="..."></span>
+                        <span class="user-name">{{lesson.instructor.name}}</span></p>
+
+                    {% elif request.session.user_type == "instructor" %}
+                    <p class="room-details">学生:
+                        <span class="user-name"> {{lesson.student.name}} </span>
+                        <img src="{{MEDIA_URL}}/media/{{lesson.student.img}}"
+                            class="img-room-user rounded-circle ml-1 mr-1 mb-1" alt="edzncxk"></span>
+                    </p>
+                    {% endif %}
+                </a>
+
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="column wholeChat" id="">
+            <div class="title">
+            </div>
+            <div class="message-box d-flex flex-column" id="chat-window"></div>
+            <form id="message-form">
+                <textarea class="textarea" id="message-input" placeholder="Your message here" autofocus></textarea>
+                <button type="submit" class="btn-send"><span class="btn-text">メッセージを送る</span></button>
+            </form>
+        </div>
+
+
+    </div>
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+    <script src="https://media.twiliocdn.com/sdk/js/common/v0.1/twilio-common.min.js"></script>
+    <script src="https://media.twiliocdn.com/sdk/js/chat/v2.0/twilio-chat.min.js"></script>
+
+    <script src="{% static 'chat/scripts/chatting.js' %}"></script>
+    <!-- <script src="{% static 'chat/scripts/chatting-mobile.js' %}"></script> -->
+    <script src="{% static 'chat/scripts/modal.js' %}"></script>
+    <script>
+
+        $(window).on("load", function () {
+            $(".loader-wrapper").delay(5000).fadeOut("slow");
+        });
+
+        let rooms = document.getElementsByClassName("rooms");
+        let room = rooms[0].getElementsByClassName("single-room");
+        let a;
+        let d;
+        let t;
+        let roomname;
+        for (var i = 0; i < room.length; i++) {
+            room[i].addEventListener('click', function (e) {
+                e.preventDefault();
+                this.classList.remove("single-room");
+                this.classList.add("single-room-active");
+                this.classList.add("prevent-clicking");
+                a = this.getElementsByClassName("rooms-anchor");
+                d = a[0].getElementsByClassName("namee");
+                t = d[0].getElementsByClassName("id");
+                roomname = t[0].innerHTML;
+                checkclass(roomname);
+
+            })
+
+        }
+
+        var aa;
+        var dd;
+        var tt;
+
+        function checkclass(roomname) {
+            var room_active = document.getElementsByClassName("single-room-active");
+
+            for (var i = 0; i < room_active.length; i++) {
+                aa = room_active[i].getElementsByClassName("rooms-anchor");
+                dd = aa[0].getElementsByClassName("namee");
+                tt = dd[0].getElementsByClassName("id");
+                if (roomname == tt[0].innerHTML) {
+
+                }
+                else if (roomname != tt[0].innerHTML) {
+                    room_active[i].classList.remove("prevent-clicking");
+                    room_active[i].classList.add("single-room");
+                    room_active[i].classList.remove("single-room-active");
+
+                }
+            }
+        }
+
+        var startsession = document.getElementById("modal-btn");
+
+        var ti = document.getElementsByClassName("timelesson");
+        var lessonhour;
+        var lessonMinute;
+        var lhourparse;
+        var lminuteparse;
+
+        //cuntdown modal
+        var beforestartsession = setInterval(function () {
+            for (var i = 0; i < ti.length; i++) {
+                lessonhour = ti[i].innerHTML.slice(13, 16);
+                lessonMinute = ti[i].innerHTML.slice(17, 20);
+                lhourparse = parseInt(lessonhour, 10);
+                lminuteparse = parseInt(lessonMinute, 10);
+                console.log(lminuteparse);
+
+                var h = lhourparse;
+                var m = lminuteparse;
+
+                //current time
+                var today = new Date();
+                var hour = today.getHours();
+                console.log(hour);
+                var minute = today.getMinutes();
+                var seconds = today.getSeconds();
+                if (hour == h && minute == m) {
+                    $("#myModal").modal("show");
+                    startsession.disabled = true;
+                    clearInterval(beforestartsession);
+                    if (seconds > 0) {
+                        var sec = 60 - seconds;
+                        countdown(sec);
+                    }
+                    else if (seconds == 0) {
+                        countdown(60);
+                    }
+
+                }
+
+                startsession.disabled = false;
+            }
+            //lesson time
+
+        }, 1000);
+
+        //rating modal
+        var ratingmodal = setInterval(function () {
+            //ending time lesson
+            for (var i = 0; i < ti.length; i++) {
+                lessonhour = ti[i].innerHTML.slice(13, 16);
+                lessonMinute = ti[i].innerHTML.slice(17, 20);
+                lhourparse = parseInt(lessonhour, 10);
+                lminuteparse = parseInt(lessonMinute, 10);
+
+
+                var h = lhourparse + 1;
+                var min = lminuteparse;
+                var today = new Date();
+                var hour = today.getHours();
+                var minute = today.getMinutes();
+                if (h == hour && min == minute) {
+                    $('#rating').modal('show');
+                    $('#myModal').modal('hide');
+
+                }
+            }
+        }, 1000);
+
+
+        function countdown(sec) {
+            var timer = document.getElementById("timer");
+            var counter = 0;
+            var timeleft = sec;
+            var time = convertSeconds(timeleft - counter);
+            timer.innerHTML = convertSeconds(timeleft - counter);
+            var internal = setInterval(function () {
+                counter++;
+                timer.innerHTML = convertSeconds(timeleft - counter);
+                if (counter === timeleft) {
+                    clearInterval(internal);
+                }
+            }, 1000);
+        }
+
+        function convertSeconds(s) {
+            var min = Math.floor(s / 60);
+            var sec = s % 60;
+            var minformat;
+            var secformat;
+            if (min < 10) {
+                minformat = ("0" + min).slice(-2);
+            }
+            else {
+                minformat = min;
+            }
+            if (sec < 10) {
+                secformat = ("0" + sec).slice(-2);
+            }
+            else {
+                secformat = sec;
+            }
+            return minformat + ":" + secformat;
+        }
+
+    </script>
+</body>
+
+</html>
