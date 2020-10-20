@@ -36,7 +36,7 @@
             <div class="ml-5 mt-5">
                 <p>パスワード
                 </p>
-                <p id='password' class="font-weight-bold">12345</p>
+                <p id='password' class="font-weight-bold">{{ins.password}}</p>
             </div>
         </div>
 
@@ -64,6 +64,11 @@
                 </p>
                 <p class="font-weight-bolder" id='askFor'>{{ins.what_you_can_ask_for}}</p>
             </div>
+            <div class="ml-5 mt-5">
+                <p>PayPalアカウント
+                </p>
+                <p class="font-weight-bolder" id='paypal_account'>{{ins.paypal_account}}</p>
+            </div>
         </div>
     </div>
 
@@ -79,7 +84,7 @@
 
     <script>
         document.getElementById('goBack').onclick = function () {
-            window.location.href = "";
+            window.location.href = "{% url 'admin_page' %}";
         }
     </script>
 </body>

@@ -19,7 +19,6 @@ def links(request):
     if not 'is_logged' in request.session.keys():
         messages.success(request, 'You Must Login First!')
         return redirect('mylogin')
-    
     users = User.objects.all()
     return render(request, 'links.html', {'users':users})
 
@@ -115,9 +114,9 @@ def signup1(request):
 def signup2(request, user_id):
     if request.POST:
         user = Instructor.objects.get(pk= user_id)
-        if request.FILES['imgFile']:
+        if 'imgFile' in request.FILES['imgFile']:
             fs = FileSystemStorage()
-            myfile = request.FILES['imgFile']
+            myfile = request.FILES.keys()
             filename = fs.save(user_id + '_img', myfile)
             user.img = user_id + '_img'
         if 'profession' in request.POST.keys() and 'catchphrase' in request.POST.keys():
@@ -125,6 +124,7 @@ def signup2(request, user_id):
             user.catch_phrase = request.POST['catchphrase']
             user.intro_msg = request.POST['self-introduction']
             user.what_you_can_ask_for = request.POST['askfor']
+            user.paypal_account = request.POST['paypal_account']
             user.save()
             return redirect('signup3', user_id = user_id)
     return render(request, 'sign-up-second-step.html', context={'user_id':user_id})
@@ -133,7 +133,7 @@ def signup2(request, user_id):
 def signup2_student(request, user_id):
     if request.POST:
         user = Student.objects.get(pk= user_id)
-        if request.FILES['imgFile']:
+        if 'imgFile' in request.FILES.keys():
             fs = FileSystemStorage()
             myfile = request.FILES['imgFile']
             filename = fs.save(user_id + '_img', myfile)
@@ -223,20 +223,33 @@ def admin_page(request):
             return redirect('logout')
     instructors = Instructor.objects.all()
     students = Student.objects.all()
-
-    completed_lessons = Lesson.objects.filter(Date__lt = datetime.now())
+    completed_lessons = []
+    paid_wfs = Widget_form.objects.filter(paid__exact=True)
+    now = datetime.now()
+    
+    for x in paid_wfs:
+        d_str = "-".join(get_approved_date(x))
+        d_obj = datetime.strptime(d_str[2:-1], '%y-%m-%d')
+        if (d_obj < now): 
+            completed_lessons.append(x.lesson)
+    
     tobe_started_lessons = Lesson.objects.filter(Date__gt=datetime.now())
     inprogress_lessons = Lesson.objects.filter(Date=datetime.today())
     monthly_completed_lessons = Lesson.objects.filter(Date__lt = datetime.now(), Date__gt = datetime.now() - relativedelta(months=1))
     total_sales = 1500 * len(completed_lessons)
     monthly_sales = 1500 * (len(monthly_completed_lessons))
+    monthly_lessons = {'01': 0, '02':0, '03':0, '04':0, '05':0, '06':0, '07':0, '08':0, '09':0, '10':0, '11':0, '12':0}
+    months = []
+    for lesson in completed_lessons:
+        if lesson.Date.strftime('%m') in monthly_lessons.keys():
+            monthly_lessons[lesson.Date.strftime('%m')] += 1500
     return render(request, 'admin.html', 
     
                             context={   'completed_lessons':completed_lessons, 'tobe_started_lessons':tobe_started_lessons, 
                                         'inprogress_lessons':inprogress_lessons, 'instructors':instructors, 
                                         'students':students, 'len_completed_lessons':str(len(completed_lessons)),
                                         'len_inprogress_lessons':str(len(inprogress_lessons)), 'len_tobe_started_lessons':str(len(tobe_started_lessons)),
-                                        'total_sales': total_sales, 'monthly_sales':monthly_sales, 'lsn_page':'lesson_page'
+                                        'total_sales': total_sales, 'monthly_sales':monthly_sales, 'lsn_page':'lesson_page', 'monthly_lessons':monthly_lessons
                                     }
                 )
 
@@ -314,7 +327,7 @@ def edit_lesson_reservation(request, lesson_id):
         lesson.title = request.POST['lesson-title']
         lesson.starting= request.POST['start-hour']+ ':'+request.POST['start-min']
         lesson.ending=request.POST['end-hour'] +' : '+ request.POST['end-min']
-        lesson.Date =datetime.datetime.strptime(request.POST['date'], '%Y-%m-%d')  
+        lesson.Date = datetime.strptime(request.POST['date'], '%Y-%m-%d')  
         lesson.save()
         return redirect('lesson_reservation')
     todays_session = get_starting_time(request)
@@ -387,10 +400,8 @@ def reserved_lessons(request):
     todays_session = get_starting_time(request)
     return render(request, 'reserved_lessons.html', {'lessons':lessons, 'logged_user':logged_user, 'todays_session': todays_session})
 
-def delete_lesson(request, lesson_id):
-    if not 'is_logged' in request.session.keys():
-        messages.success(request, 'You Must Login First!')
-        return redirect('mylogin')
+def delete_lesson_admin(request, lesson_id):
+
     lesson = Lesson.objects.get(pk=lesson_id)
     ins_email = lesson.instructor.email
     emails = [ins_email]
@@ -405,6 +416,14 @@ def delete_lesson(request, lesson_id):
         fail_silently=False
     )
     return redirect('admin_page')
+
+def delete_lesson(request, lesson_id):
+    if not 'is_logged' in request.session.keys():
+        messages.success(request, 'You Must Login First!')
+        return redirect('mylogin')
+    lesson = Lesson.objects.get(pk=lesson_id)
+    lesson.delete()
+    return redirect('lesson_reservation')
 
 def profile(request, user_id):
     if not 'is_logged' in request.session.keys():
@@ -448,6 +467,7 @@ def edit_profile(request, user_id):
             user.catch_phrase = request.POST['catch_phrase']
             user.intro_msg = request.POST['self-introduction']
             user.what_you_can_ask_for = request.POST['what_you_can_ask_for']
+            user.paypal_account = request.POST['paypal_account']
             user.save() 
             messages.success(request, 'Profile has been updated')
             return redirect('profile', user_id = int(user_id))
@@ -536,8 +556,11 @@ def get_starting_time(request):
     logged_user = User.objects.get(username__exact=request.session['email'])
     wfs = (x for x in Widget_form.objects.all() if ((x.student.Id == logged_user.Id or x.instructor.Id == logged_user.Id) and x.status == "Both Approved" and x.paid))
     todays_wfs = []
+       
     for x in wfs:
-        if int(get_approved_date(x)[0]) <= now.year and int(get_approved_date(x)[1]) <= now.month and int(get_approved_date(x)[2]) <= now.day:
+        d_str = "-".join(get_approved_date(x))
+        d_obj = datetime.strptime(d_str[2:-1], '%y-%m-%d')
+        if (d_obj <= now):
             todays_wfs.append(x)
 
     list_of_times = []

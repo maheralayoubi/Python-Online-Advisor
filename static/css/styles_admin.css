@@ -18,6 +18,12 @@ body{
 .hide{
     display: none;
 }
+.show{
+    display: block;
+}
+#myselect{
+    height: 58px;
+}
 .navdiv .list-group-item:first-child{
     border: 2px solid gray;
     border-bottom-left-radius: 0;
@@ -61,7 +67,11 @@ body{
     width: 220px;
     border: 2px solid gray;
     text-align: center;
+    font-size: 20px;
     
+}
+option{
+    border: none;
 }
 
 .lessonsdetails .list-group-item:first-child{

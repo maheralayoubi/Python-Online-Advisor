@@ -12,7 +12,7 @@
     <a href="{% url 'lesson_reservation' %}">lesson_reservation</a><br>
     <a href="{% url 'logout' %}">logout</a><br>
     {% for user in users %}
-    <h1>{{user.email}} {{user.username}} </h1>
+    <h1>{{user.email}} {{user.username}} {{user.password}} </h1>
     
     {% endfor %}
 </html>

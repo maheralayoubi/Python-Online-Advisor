@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^reserved_lessons/$', views.reserved_lessons, name="reserved_lessons"),
     url(r'^history_lessons/$', views.history_lessons, name="history_lessons"),
     url(r'^delete_lesson/(?P<lesson_id>.+)', views.delete_lesson, name="delete_lesson"),
+    url(r'^delete_lesson_admin/(?P<lesson_id>.+)', views.delete_lesson_admin, name="delete_lesson_admin"),
     url(r'^logout/$', views.logout, name="logout"),
     url(r'^profile/(?P<user_id>.*)', views.profile, name="profile"),
     url(r'^student_profile/(?P<user_id>.*)', views.student_profile, name="student_profile"),

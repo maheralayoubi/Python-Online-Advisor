@@ -47,10 +47,39 @@
                 </ul>
 
                 <ul class="list-group list-group-horizontal-sm exportdiv mt-2 ml-5">
-                    <li class="list-group-item list-group-item-action exportsales">月別売り上げ
-                    </li>
-                    <li class="list-group-item exportsales disabled">{{monthly_sales}}</li>
+                    <!-- <li class="list-group-item list-group-item-action exportsales"> -->
+                        <select class="custom-select list-group-item list-group-item-action exportsales" id="myselect">
+                            <option value="non" selected>月別売り上げ</option>
+                            <option value="jan">一月</option>
+                            <option value="feb">二月</option>
+                            <option value="march">三月</option>
+                            <option value="april">四月</option>
+                            <option value="may">五月</option>
+                            <option value="jun">六月</option>
+                            <option value="july">七月</option>
+                            <option value="aug">八月</option>
+                            <option value="sep">九月</option>
+                            <option value="oct">十月</option>
+                            <option value="nov">十一月</option>
+                            <option value="dec">十二月</option>
+                        </select>
+                    <!-- </li> -->
+                    
+                    <li class="list-group-item exportsales disabled show ml"></li>
+                    <li class="list-group-item exportsales disabled hide ml">{{monthly_lessons.01}}</li>
+                    <li class="list-group-item exportsales disabled hide ml">{{monthly_lessons.02}}</li>
+                    <li class="list-group-item exportsales disabled hide ml">{{monthly_lessons.03}}</li>
+                    <li class="list-group-item exportsales disabled hide ml">{{monthly_lessons.04}}</li>
+                    <li class="list-group-item exportsales disabled hide ml">{{monthly_lessons.05}}</li>
+                    <li class="list-group-item exportsales disabled hide ml">{{monthly_lessons.06}}</li>
+                    <li class="list-group-item exportsales disabled hide ml">{{monthly_lessons.07}}</li>
+                    <li class="list-group-item exportsales disabled hide ml">{{monthly_lessons.08}}</li>
+                    <li class="list-group-item exportsales disabled hide ml">{{monthly_lessons.09}}</li>
+                    <li class="list-group-item exportsales disabled hide ml">{{monthly_lessons.10}}</li>
+                    <li class="list-group-item exportsales disabled hide ml">{{monthly_lessons.11}}</li>
+                    <li class="list-group-item exportsales disabled hide ml">{{monthly_lessons.11}}</li>
                 </ul>
+
             </div>
 
 
@@ -177,7 +206,7 @@
                                 {% else %}
                                 <td><a href="{% url 'lesson_page' lesson.id %}">まだ割り当てられていません</a></td>
                                 {% endif %}
-                                <td> <a href="{% url 'delete_lesson' lesson.id %}"> &#9940; </a></td>
+                                <td> <a href="{% url 'delete_lesson_admin' lesson.id %}"> &#9940; </a></td>
                             </tr>
                             {% endfor %}
                             {% endif %}
@@ -188,7 +217,8 @@
         </div>
 
         <div class="tab-pane w-100 blockstyle" id="instructorManagmentdiv" role="tabpanel">
-            <input id="searchinstructor" class="search" type="text" placeholder="講師名検索エリア" aria-label="Search" onkeyup="searchInstructor()">
+            <input id="searchinstructor" class="search" type="text" placeholder="講師名検索エリア" aria-label="Search"
+                onkeyup="searchInstructor()">
 
 
 
@@ -233,8 +263,8 @@
             </table>
         </div>
         <div class="tab-pane blockstyle" id="studentManagmentdiv" role="tabpanel">
-            <input id="searchstudents" class="search" type="text" placeholder="生徒名検索エリア"
-                aria-label="Search" onkeyup="searchStudent()">
+            <input id="searchstudents" class="search" type="text" placeholder="生徒名検索エリア" aria-label="Search"
+                onkeyup="searchStudent()">
             <table class="table table-striped ml-1" id='studentManagment'>
                 <thead>
                     <tr>
@@ -276,8 +306,8 @@
             </table>
         </div>
         <div class="tab-pane " id="chatManagment" role="tabpanel">
-            <input id="searchboth" class="search" type="text" placeholder="講師、生徒名検索エリア"
-                aria-label="Search" onkeyup="searchBoth()">
+            <input id="searchboth" class="search" type="text" placeholder="講師、生徒名検索エリア" aria-label="Search"
+                onkeyup="searchBoth()">
             <table class="table table-striped ml-1">
                 <thead>
                     <tr>
@@ -334,12 +364,12 @@
                 <a class="list-group-item list-group-item-action ml-5" data-toggle="list"
                     href="#smalllessonsInProgressdiv" role="tab" id="smalld">開始中の
                     レッスン
-                    </a>
+                </a>
                 <a class="list-group-item disabled">987.645</a>
                 <a class="list-group-item list-group-item-action ml-5" data-toggle="list"
                     href="#smalllessonsToBeStarteddiv" role="tab">開始予定の
                     レッスン
-                    </a>
+                </a>
                 <a class="list-group-item disabled">987.645</a>
             </div>
 
@@ -460,10 +490,174 @@
     <script src="{%static 'chat/scripts/messages.js'%}"></script>
 
     <script>
-        // var lessonI = document.getElementsByClassName("lessonID");
-        // for (var i = 0; i < lessonI.length; i++) {
-        //     console.log(lessonI[i].innerHTML);
-        // }
+        document.getElementById("myselect").onchange = function(){
+            var op = document.getElementsByTagName("option");
+            var sales_value = document.getElementsByClassName("ml");
+            for(var i=0; i<op.length; i++){
+                // console.log(op[i].selected);
+                if(op[i].selected == true){
+                    if(op[i].value == "non"){
+                        // console.log(sales_value[0].innerHTML)
+                        for(var j=0; j<sales_value.length; j++){
+                            if(j == 0){
+                                sales_value[0].classList.remove("hide");
+                                sales_value[0].classList.add("show");
+                            }
+                            else{
+                                sales_value[j].classList.remove("show");
+                                sales_value[j].classList.add("hide");
+                            }
+                        }
+                    }
+                    else if(op[i].value == "jan"){
+                        // console.log(sales_value[0].innerHTML)
+                        for(var j=0; j<sales_value.length; j++){
+                            if(j == 1){
+                                sales_value[1].classList.remove("hide");
+                                sales_value[1].classList.add("show");
+                            }
+                            else{
+                                sales_value[j].classList.remove("show");
+                                sales_value[j].classList.add("hide");
+                            }
+                        }
+                    }
+                    else if(op[i].value == "feb"){
+                        for(var j=0; j<sales_value.length; j++){
+                            if(j == 2){
+                                sales_value[2].classList.remove("hide");
+                                sales_value[2].classList.add("show");
+                            }
+                            else{
+                                sales_value[j].classList.remove("show");
+                                sales_value[j].classList.add("hide");
+                            }
+                        }
+                    }
+                    else if(op[i].value == "march"){
+                        for(var j=0; j<sales_value.length; j++){
+                            if(j == 3){
+                                sales_value[3].classList.remove("hide");
+                                sales_value[3].classList.add("show");
+                            }
+                            else{
+                                sales_value[j].classList.remove("show");
+                                sales_value[j].classList.add("hide");
+                            }
+                        }
+                    }
+                    else if(op[i].value == "april"){
+                        for(var j=0; j<sales_value.length; j++){
+                            if(j == 4){
+                                sales_value[4].classList.remove("hide");
+                                sales_value[4].classList.add("show");
+                            }
+                            else{
+                                sales_value[j].classList.remove("show");
+                                sales_value[j].classList.add("hide");
+                            }
+                        }
+                    }
+                    else if(op[i].value == "may"){
+                        for(var j=0; j<sales_value.length; j++){
+                            if(j == 5){
+                                sales_value[5].classList.remove("hide");
+                                sales_value[5].classList.add("show");
+                            }
+                            else{
+                                sales_value[j].classList.remove("show");
+                                sales_value[j].classList.add("hide");
+                            }
+                        }
+                    }
+                    else if(op[i].value == "jun"){
+                        for(var j=0; j<sales_value.length; j++){
+                            if(j == 6){
+                                sales_value[6].classList.remove("hide");
+                                sales_value[6].classList.add("show");
+                            }
+                            else{
+                                sales_value[j].classList.remove("show");
+                                sales_value[j].classList.add("hide");
+                            }
+                        }
+                    }
+                    else if(op[i].value == "july"){
+                        for(var j=0; j<sales_value.length; j++){
+                            if(j == 7){
+                                sales_value[7].classList.remove("hide");
+                                sales_value[7].classList.add("show");
+                            }
+                            else{
+                                sales_value[j].classList.remove("show");
+                                sales_value[j].classList.add("hide");
+                            }
+                        }
+                    }
+                    else if(op[i].value == "aug"){
+                        for(var j=0; j<sales_value.length; j++){
+                            if(j == 8){
+                                sales_value[8].classList.remove("hide");
+                                sales_value[8].classList.add("show");
+                            }
+                            else{
+                                sales_value[j].classList.remove("show");
+                                sales_value[j].classList.add("hide");
+                            }
+                        }
+                    }
+                    else if(op[i].value == "sep"){
+                        for(var j=0; j<sales_value.length; j++){
+                            if(j == 9){
+                                sales_value[9].classList.remove("hide");
+                                sales_value[9].classList.add("show");
+                            }
+                            else{
+                                sales_value[j].classList.remove("show");
+                                sales_value[j].classList.add("hide");
+                            }
+                        }
+                    }
+                    else if(op[i].value == "oct"){
+                        for(var j=0; j<sales_value.length; j++){
+                            if(j == 10){
+                                sales_value[10].classList.remove("hide");
+                                sales_value[10].classList.add("show");
+                            }
+                            else{
+                                sales_value[j].classList.remove("show");
+                                sales_value[j].classList.add("hide");
+                            }
+                        }
+                    }
+                    else if(op[i].value == "nov"){
+                        for(var j=0; j<sales_value.length; j++){
+                            if(j == 11){
+                                sales_value[11].classList.remove("hide");
+                                sales_value[11].classList.add("show");
+                            }
+                            else{
+                                sales_value[j].classList.remove("show");
+                                sales_value[j].classList.add("hide");
+                            }
+                        }
+                    }
+                    else if(op[i].value == "dec"){
+                        for(var j=0; j<sales_value.length; j++){
+                            if(j == 12){
+                                sales_value[12].classList.remove("hide");
+                                sales_value[12].classList.add("show");
+                            }
+                            else{
+                                sales_value[j].classList.remove("show");
+                                sales_value[j].classList.add("hide");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         document.getElementById('collabse').onclick = function () {
             $('.collapse').collapse('toggle');
         }

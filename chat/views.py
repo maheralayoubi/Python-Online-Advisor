@@ -11,7 +11,8 @@ import json
 from .models import Room, Widget_form
 fake = Faker()
 
-
+Signature = ' \n========== \nふらっと相談オンライン \nhttps://flatsodanonline.com \n《お問い合わせ》\nふらっと相談オンライン事務局 \ninfo@flatsodanonline.com （営業時間：平⽇ 10：00〜19：00）\n※本メールに覚えのない場合は、本メールを破棄して下さい。\n※本メールは⾃動送信のため、このメールへ直接返信は出来ません。'
+client_URL = "client URL to be inserted here"
 def all_rooms(request):
     rooms = Room.objects.all()
     return render(request, 'chat/index.html', {'rooms': rooms})
@@ -97,7 +98,7 @@ def request_session(request, lesson_id):
         email = wf.instructor.email
         send_mail(
                 '予約リクエストがきています【ふらっと相談オンライン】',
-                '様' + wf.instructor.name +'「ふらっと相談オンライン」で予約リクエストがきています。\n=== \n候補⽇ 1：'+ wf.option1 +' \n候補⽇ 2：'+ wf.option2 +' \n候補⽇ 3：'+ wf.option3 +' \n=== \nこちら（☆URL リンク）からログインして、候補⽇をお選びください。\n候補⽇の中に予約可能な⽇程がない場合は、ユーザーに再リクエストを申請してください。\n========== \nふらっと相談オンライン \nhttps://flatsodanonline.com \n《お問い合わせ》\nふらっと相談オンライン事務局 \ninfo@flatsodanonline.com （営業時間：平⽇ 10：00〜19：00）\n※本メールに覚えのない場合は、本メールを破棄して下さい。\n※本メールは⾃動送信のため、このメールへ直接返信は出来ません。' ,
+                '様' + wf.instructor.name +'「ふらっと相談オンライン」で予約リクエストがきています。\n=== \n候補⽇ 1：'+ wf.option1 +' \n候補⽇ 2：'+ wf.option2 +' \n候補⽇ 3：'+ wf.option3 +' \n=== \nこちら'+client_URL +'からログインして、候補⽇をお選びください。\n候補⽇の中に予約可能な⽇程がない場合は、ユーザーに再リクエストを申請してください。'+ Signature ,
                 'onlinecareer92@gmail.com',
                 [email],
                 fail_silently=False
@@ -128,13 +129,13 @@ def forward_to_student(request, wf_id):
         email = wf.student.email
         send_mail(
                 '予約の候補⽇がきています【ふらっと相談オンライン】',
-                '「ふらっと相談オンライン」でアドバイザーから予約の候補⽇がきています。\n=== \n候補⽇ 1：'+ choice +'\n予約を確定する場合は、こちら（☆URL リンク）からログインして「承認する」ボタンを 送信してください。\n予約をキャンセルする場合は、「マイページ」から予約をキャンセルしてください。' ,
+                '「ふらっと相談オンライン」でアドバイザーから予約の候補⽇がきています。\n=== \n候補⽇ 1：'+ choice +'\n予約を確定する場合は、こちら '+ client_URL +' からログインして「承認する」ボタンを 送信してください。\n予約をキャンセルする場合は、「マイページ」から予約をキャンセルしてください。' ,
                 'onlinecareer92@gmail.com',
                 [email],
                 fail_silently=False
             )
         messages.success(
-            request, 'クエストの申請が完了しました ' + str(wf.student.name))
+            request, 'クエストの申請が完了しました ')
         return redirect('profile', user_id=wf.instructor.Id)
 
     return redirect('profile', user_id=wf.instructor.Id)
@@ -164,7 +165,7 @@ def student_final_confirmation(request, wf_id):
             
             send_mail(
                     '予約が確定しました【ふらっと相談オンライン】',
-                    '● 様 '+ wf.instructor.name + '下記の内容でご予約が確定しました。\n===  \nレッスンタイトル：キャリア⾯談 \n⽇程： '+ chosen +' \n担当：●●（アドバイザー名）\n=== \nこちら（☆URL リンク）からログインしていただき、ユーザーに使⽤する WEB ツールに \nついてご連絡してください。\n========== \n ふらっと相談オンライン \nhttps://flatsodanonline.com \n《お問い合わせ》\n ふらっと相談オンライン事務局 \ninfo@flatsodanonline.com （営業時間：平⽇ 10：00〜19：00）\n※本メールに覚えのない場合は、本メールを破棄して下さい。\n※本メールは⾃動送信のため、このメールへ直接返信は出来ません。' ,
+                    '● 様 '+ wf.instructor.name + '下記の内容でご予約が確定しました。\n===  \nレッスンタイトル：キャリア⾯談 \n⽇程： '+ chosen +' \n担当：●●（アドバイザー名）\n=== \nこちら '+ client_URL +' からログインしていただき、ユーザーに使⽤する WEB ツールに \nついてご連絡してください。'+Signature ,
                     'onlinecareer92@gmail.com',
                     [email],
                     fail_silently=False
@@ -180,7 +181,7 @@ def resubmit(request, wf_id):
     email = wf.instructor.email
     send_mail(
             '予約の再リクエスト申請がきています【ふらっと相談オンライン】',
-            '「ふらっと相談オンライン」でご希望の⽇程が合わなかったため、アドバイザーから予約の \n再リクエスト申請がきています。\n恐れ⼊りますが、こちら（☆URL リンク）からログインしていただき、別の⽇程で再度予 \n約リクエストを送信してください。 \n========== \nふらっと相談オンライン \nhttps://flatsodanonline.com \n《お問い合わせ》\nふらっと相談オンライン事務局 \ninfo@flatsodanonline.com （営業時間：平⽇ 10：00〜19：00）\n※本メールに覚えのない場合は、本メールを破棄して下さい。\n※本メールは⾃動送信のため、このメールへ直接返信は出来ません。',
+            '「ふらっと相談オンライン」でご希望の⽇程が合わなかったため、アドバイザーから予約の \n再リクエスト申請がきています。\n恐れ⼊りますが、こちら '+ client_URL +' からログインしていただき、別の⽇程で再度予 \n約リクエストを送信してください。' + Signature,
             'onlinecareer92@gmail.com',
             [email],
             fail_silently=False

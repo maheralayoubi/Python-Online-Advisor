@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'django_extensions',
     'chat.apps.ChatConfig',
     'main.apps.MainConfig',
- 
 
 ]
 

@@ -22,6 +22,7 @@ class Instructor(User):
     number_of_ratings = models.IntegerField(default=0)
     total_ratings = models.IntegerField(default=0)
     rating = models.IntegerField(default=  0)
+    paypal_account = models.CharField(max_length=500)
 
 class Student(User):
     what_I_want_to_talk_about = models.CharField(max_length=200)
