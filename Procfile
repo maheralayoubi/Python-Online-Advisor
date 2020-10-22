@@ -1,2 +1,2 @@
-web: gunicorn chat_django.wsgi --log-file -
+web: gunicorn chat_django.wsgi
 release: python manage.py migrate

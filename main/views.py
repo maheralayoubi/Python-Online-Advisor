@@ -20,6 +20,7 @@ def links(request):
         messages.success(request, 'You Must Login First!')
         return redirect('mylogin')
     users = User.objects.all()
+    
     return render(request, 'links.html', {'users':users})
 
 
@@ -172,7 +173,7 @@ def resetPass(request):
             
             send_mail(
                     'Reset Password',
-                    'Dear User,\nPlease press on the link below to reset your password  <a href=" https://079ac5db9a23.ngrok.io/resetPass2/' + token + '">this is the link</a> ',
+                    'Dear User,\nPlease press on the link below to reset your password  <a href="https://4b73fffa0039.ngrok.io//resetPass2/' + token + '">this is the link</a> ',
                     'onlinecareer92@gmail.com',
                     [email],
                     fail_silently=False
@@ -525,6 +526,8 @@ def edit_student_profile(request, user_id):
             myfile = request.FILES['imgFile']
             filename = fs.save(user_id + '_img', myfile)
             user.img = user_id + '_img'
+            user.save()
+            print("img file in keys")
         
         if 'catch_phrase' in request.POST.keys():
             user.email = request.POST['email']
