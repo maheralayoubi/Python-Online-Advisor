@@ -157,14 +157,14 @@ AUTH_USER_MODEL = 'main.User'
 # ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'onlinecareer92@gmail.com' # this is exactly the value 'apikey'
+EMAIL_HOST_USER = 'oc.flatsodan@gmail.com' # this is exactly the value 'apikey'
 EMAIL_HOST_PASSWORD = '76030969oc' # this is your API key
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 # media
-MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 AUTHENTICATION_BACKENDS = (
         'django.contrib.auth.backends.ModelBackend',

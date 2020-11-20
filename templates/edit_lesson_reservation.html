@@ -128,8 +128,19 @@
                         </p>
                     </div>
                     <div class="d-flex flex-row">
-                        <input type="text" id="picker" name="date" required>
-                        <i class='fas fa-calendar-alt' id="pickericon"></i>
+                    <select class="custom-select2" name="day" required>
+
+                            <option value="月" selected>月</option>
+                            <option value="火">火</option>
+                            <option value="水">水</option>
+                            <option value="木">木</option>
+                            <option value="金">金</option>
+                            <option value="土">土</option>
+                            <option value="日">日</option>
+                            
+                        </select>
+                        {% comment %} <input type="text" id="picker" name="date" required>
+                        <i class='fas fa-calendar-alt' id="pickericon"></i> {% endcomment %}
                     </div>
                 </div>
 

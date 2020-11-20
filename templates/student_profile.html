@@ -241,7 +241,17 @@
                     <div class="student-widget" id="list-schedule-class">
                         <h5 class="ml-3">レッスンタイトル: {{wf.lesson.title}}</h5>
                         <h5 class="ml-3 text-truncate">講師の名前: {{wf.instructor.name}}</h5>
-                        <h5 class="ml-3">リクエスト情報: {{wf.status}}</h5>
+                        <h5 class="ml-3">リクエスト情報: 
+                        {% if wf.status == "Pending"%}
+                            保留中
+                        {% elif wf.status == "Both Approved" %}
+                            両方承認
+                        {% elif wf.status == "Student Should Resubmit" %}
+                            学生は再提出する必要があります
+                        {% elif wf.status == "Instructor Approved" %}
+                            インストラクター承認
+                        {% endif %}
+                        </h5>
                         <div class="column ml-3">
                             <div class="d-flex flex-row ml-1">
                                 <div class="title-bar"></div>
@@ -345,6 +355,7 @@
                 var cookies = document.cookie.split(';');
                 for (var i = 0; i < cookies.length; i++) {
                     var cookie = cookies[i].trim();
+
                     if (cookie.substring(0, name.length + 1) === (name + '=')) {
                         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                         break;

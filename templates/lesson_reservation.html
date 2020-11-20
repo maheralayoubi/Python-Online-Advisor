@@ -143,8 +143,21 @@
                         </p>
                     </div>
                     <div class="d-flex felx-row">
-                        <input type="text" id="picker" name="date" required>
-                        <i class='fas fa-calendar-alt' id="pickericon"></i>
+                            
+                            
+                        <select class="custom-select2" name="day" required>
+
+                            <option value="月" selected>月</option>
+                            <option value="火">火</option>
+                            <option value="水">水</option>
+                            <option value="木">木</option>
+                            <option value="金">金</option>
+                            <option value="土">土</option>
+                            <option value="日">日</option>
+                            
+                        </select>
+                        {% comment %} <input type="text"  name="date"  required> {% endcomment %}
+                        {% comment %} <i class='fas fa-calendar-alt' id="pickericon"></i> {% endcomment %}
                     </div>
                 </div>
 
@@ -268,11 +281,11 @@
     <div class="whole-body1">
         <div class="navigation list-group" id="list-tab" role="tablist">
             <a class="text-nav" href="#scheduled_lesson" id="scheduled_lesson_link" data-toggle="list"
-                role="tab"><span class="underline">レッスン予定</span></a>
+                role="tab"><span class="underline">作成したレッスン</span></a>
             <a class="text-nav marg" href="#reserved_lesson" id="reserved_lesson_link" data-toggle="list"
-                role="tab">予約済み
+                role="tab">実施予定のレッスン
             </a>
-            <a class="text-nav marg" href="#history" id="history_link" data-toggle="list" role="tab">履歴
+            <a class="text-nav marg" href="#history" id="history_link" data-toggle="list" role="tab">終了したレッスン
             </a>
         </div>
         <div class="tab-content" id="nav-tabContent">
@@ -295,7 +308,7 @@
                                     </div>
                                     <a href="{% url 'lesson_details' lesson.id %}" class="lesson-date">
                                         <p>{{lesson.date_to_display}}
-                                            {{lesson.starting}} ~ {{ lesson.ending }} </p>
+                                        </p>
                                     </a>
                                 </div>
 

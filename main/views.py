@@ -11,7 +11,10 @@ from chat.models import Widget_form
 import pytz
 import os.path
 from dateutil.relativedelta import *
+from django.conf import settings as conf_settings
 
+Signature = ' \n========== \nふらっと相談オンライン \nhttps://flatsodanonline.com \n《お問い合わせ》\nふらっと相談オンライン事務局 \ninfo@flatsodanonline.com （営業時間：平⽇ 10：00〜19：00）\n※本メールに覚えのない場合は、本メールを破棄して下さい。\n※本メールは⾃動送信のため、このメールへ直接返信は出来ません。'
+client_URL = "(client URL to be inserted here)"
 
 
 
@@ -115,9 +118,9 @@ def signup1(request):
 def signup2(request, user_id):
     if request.POST:
         user = Instructor.objects.get(pk= user_id)
-        if 'imgFile' in request.FILES['imgFile']:
-            fs = FileSystemStorage()
-            myfile = request.FILES.keys()
+        if 'imgFile' in request.FILES.keys():
+            fs = FileSystemStorage(location = conf_settings.MEDIA_ROOT)
+            myfile = request.FILES['imgFile']
             filename = fs.save(user_id + '_img', myfile)
             user.img = user_id + '_img'
         if 'profession' in request.POST.keys() and 'catchphrase' in request.POST.keys():
@@ -135,7 +138,7 @@ def signup2_student(request, user_id):
     if request.POST:
         user = Student.objects.get(pk= user_id)
         if 'imgFile' in request.FILES.keys():
-            fs = FileSystemStorage()
+            fs = FileSystemStorage(location = conf_settings.MEDIA_ROOT)
             myfile = request.FILES['imgFile']
             filename = fs.save(user_id + '_img', myfile)
             user.img = user_id + '_img'
@@ -174,7 +177,7 @@ def resetPass(request):
             send_mail(
                     'Reset Password',
                     'Dear User,\nPlease press on the link below to reset your password  <a href="https://4b73fffa0039.ngrok.io//resetPass2/' + token + '">this is the link</a> ',
-                    'onlinecareer92@gmail.com',
+                    conf_settings.EMAIL_HOST_USER,
                     [email],
                     fail_silently=False
                 )
@@ -328,7 +331,8 @@ def edit_lesson_reservation(request, lesson_id):
         lesson.title = request.POST['lesson-title']
         lesson.starting= request.POST['start-hour']+ ':'+request.POST['start-min']
         lesson.ending=request.POST['end-hour'] +' : '+ request.POST['end-min']
-        lesson.Date = datetime.strptime(request.POST['date'], '%Y-%m-%d')  
+        lesson.Date = datetime.now()
+        lesson.day = request.POST['day']
         lesson.save()
         return redirect('lesson_reservation')
     todays_session = get_starting_time(request)
@@ -353,41 +357,30 @@ def lesson_details(request, lesson_id):
     return render(request, 'lesson_details.html', {'logged_user':logged_user, 'lesson':lesson, 'todays_session':todays_session})
     
 def lesson_reservation(request):
-    ja_days = {
-        'Sun':'日',
-        'Mon':'月',
-        'Tue':'火',
-        'Wed':'水',
-        'Thu':'木',
-        'Fri':'金',
-        'Sat':'土'
-    }
+   
     if not 'is_logged' in request.session.keys():
         messages.success(request, 'You Must Login First!')
         return redirect('mylogin')
     logged_user = User.objects.get(username__exact=request.session['email'])
     if request.POST:
-        d_arr = request.POST['date'].split('-')
-        date_to_display = datetime(int(d_arr[0]), int(d_arr[1]), int(d_arr[2]))
-        day = date_to_display.strftime("%a")        
-        
-        formatted_date = d_arr[1] + '/' + d_arr[2] +'(' + ja_days[day] + ')'
-        ins = Instructor.objects.get(username__exact=request.session['email'])
-        
+      
+        ins = Instructor.objects.get(username__exact=request.session['email'])  
         lesson = Lesson(
                         title=request.POST['lesson-title'], 
                         starting= request.POST['start-hour']+ ':'+request.POST['start-min'], 
                         ending=request.POST['end-hour'] +' : '+ request.POST['end-min'], 
-                        Date = request.POST['date'],
+                        Date = datetime.now(),
+                        day = request.POST['day'],
                         instructor = ins, 
-                        date_to_display = formatted_date
+                        date_to_display = '('+ request.POST['day'] +') ' + request.POST['start-hour']+ ':'+request.POST['start-min'] + ' ~ ' + request.POST['end-hour'] +' : '+ request.POST['end-min']
                         )
         lesson.save()
 
-    available_lessons = Lesson.objects.filter(Date__gt = datetime.now() - timedelta(days=1), student__isnull = True)
-    history_lessons = Lesson.objects.filter(Date__lt = datetime.now() - timedelta(days=1))
+    available_lessons = Lesson.objects.filter(student__isnull = True)
+    history_lessons = Lesson.objects.filter(Date__lt = datetime.now() - timedelta(days=1), student__isnull = False)
     reserved_lessons = Lesson.objects.filter(student__isnull = False)
     todays_session = get_starting_time(request)
+    
     return render(request, 'lesson_reservation.html', {'available_lessons':available_lessons, 'history_lessons':history_lessons, 'reserved_lessons':reserved_lessons, 'logged_user':logged_user, 'todays_session': todays_session})
 
 
@@ -405,14 +398,24 @@ def delete_lesson_admin(request, lesson_id):
 
     lesson = Lesson.objects.get(pk=lesson_id)
     ins_email = lesson.instructor.email
+    lesson.delete()
+    
     emails = [ins_email]
+    student_name = 'No student signed up'
     if lesson.student is not None:
         emails.append(lesson.student.email)
-    lesson.delete()
+        student_name = lesson.student.name
+        send_mail(
+        '予約がキャンセルされました【ふらっと相談オンライン】',
+        student_name + '様, \n' + '下記のご予約がキャンセルされました。\n===\nレッスンタイトル:' + lesson.title + '\n担当: '+ student_name+' \n===\n' + Signature ,
+        conf_settings.EMAIL_HOST_USER,
+        emails,
+        fail_silently=False
+          )
     send_mail(
-        'Lesson has been canceled',
-        'Dear User,\nThis is to let you know that the lesson' + lesson.title +'has been canceled by the admin',
-        'onlinecareer92@gmail.com',
+        '予約がキャンセルされました【ふらっと相談オンライン】',
+        lesson.instructor.name + '様, \n' + '下記のご予約がキャンセルされました。\n===\nレッスンタイトル:' + lesson.title + '\n担当: '+ student_name+' \n===\n' + Signature ,
+        conf_settings.EMAIL_HOST_USER,
         emails,
         fail_silently=False
     )
@@ -438,7 +441,7 @@ def profile(request, user_id):
     approved_wfs = (x for x in Widget_form.objects.all() if (x.instructor.Id == logged_user.Id and x.status == "Both Approved"))
       
     user_lessons = (x for x in Lesson.objects.all() if (x.instructor.Id == user.Id))
-    available_lessons = (x for x in Lesson.objects.all() if (x.instructor.Id == user.Id and not x.student and x.Date >= utc.localize(datetime.now() - timedelta(days=1))))
+    available_lessons = (x for x in Lesson.objects.all() if (x.instructor.Id == user.Id and not x.student))
     history_lessons = (x for x in Lesson.objects.filter(Date__lt = datetime.now() - timedelta(days=1)) if (x.instructor.Id == user.Id))
     todays_session = get_starting_time(request)
     return render(request, 'profile.html', {
@@ -446,14 +449,16 @@ def profile(request, user_id):
         'logged_user':logged_user, 'approved_wfs':approved_wfs, 'pending_wfs':pending_wfs, 'history_lessons':history_lessons, 'todays_session': todays_session})
 
 def edit_profile(request, user_id):
+    print('url is : ', conf_settings.BASE_DIR)
+    print('media:  ', conf_settings.MEDIA_ROOT)
     if not 'is_logged' in request.session.keys():
         messages.success(request, 'You Must Login First!')
         return redirect('mylogin')
     if request.POST:
         user = Instructor.objects.get(pk= user_id)
         if 'imgFile' in request.FILES.keys():
-            fs = FileSystemStorage()
-            if os.path.isfile('media/' + user_id+ '_img'):
+            fs = FileSystemStorage(location = conf_settings.MEDIA_ROOT)
+            if os.path.isfile(conf_settings.MEDIA_ROOT + '\\' + user_id+ '_img'):
                 fs.delete(user_id+ '_img')
            
             myfile = request.FILES['imgFile']
@@ -519,15 +524,13 @@ def edit_student_profile(request, user_id):
     if request.POST:
         user = Student.objects.get(pk= user_id)
         if 'imgFile' in request.FILES.keys():
-            fs = FileSystemStorage()
-            if os.path.isfile('media/' + user_id+ '_img'):
+            fs = FileSystemStorage(location = conf_settings.MEDIA_ROOT)
+            if os.path.isfile(conf_settings.MEDIA_ROOT + '\\' +user_id+ '_img'):
                 fs.delete(user_id+ '_img')
-           
             myfile = request.FILES['imgFile']
             filename = fs.save(user_id + '_img', myfile)
             user.img = user_id + '_img'
             user.save()
-            print("img file in keys")
         
         if 'catch_phrase' in request.POST.keys():
             user.email = request.POST['email']

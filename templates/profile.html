@@ -221,7 +221,7 @@
                                 </div>
                                 <a href="{% url 'lesson_details' lesson.id %}" class="lesson-date">
                                     <p>{{lesson.date_to_display}}
-                                        {{lesson.starting}} ~ {{ lesson.ending }} </p>
+                                        </p>
                                 </a>
                             </div>
 
@@ -254,8 +254,7 @@
                                         </a>
                                     </div>
                                     <a href="{% url 'lesson_details' lesson.id %}" class="lesson-date">
-                                        <p>{{lesson.date_to_display}}
-                                            {{lesson.starting}} ~ {{ lesson.ending }} </p>
+                                        <p>{{lesson.date_to_display}}</p>
                                     </a>
                                 </div>
 
@@ -322,7 +321,7 @@
                                 <button type="submit" class="btn btn-outline-info d-block mx-auto mt-2"
                                     id="request-lesson">レッスンをリクエストする</button>
                             </form>
-                            <a href="{% url 'resubmit' wf.id %}" class="resubmit">日付が致しないため、生徒にもう度スケジュルを立ててもらいます</a>
+                            <a href="{% url 'resubmit' wf.id %}" class="resubmit">日付が一致しないため、もう一度スケジュールを送信してもらう</a>
                         </div>
                     </div>
 

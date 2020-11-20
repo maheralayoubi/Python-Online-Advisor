@@ -37,3 +37,4 @@ class Lesson(models.Model):
     ending = models.CharField(max_length=20, default='None')
     date_to_display = models.CharField(max_length=20, default='None')
     rating = models.FloatField(default=5)
+    day = models.CharField(max_length=50, default ="None")

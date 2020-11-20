@@ -100,6 +100,7 @@ $(function () {
 
         roomChannel.on("messageAdded", function (message) {
             printMessage(message.author, message.body);
+            // send_email(message.author)
         });
     }
 
@@ -135,8 +136,7 @@ $(function () {
                     })
             });
     }
-
-    let $form = $("#message-form");
+        let $form = $("#message-form");
     let $input = $("#message-input");
     $form.on("submit", function (e) {
         e.preventDefault();
@@ -153,5 +153,35 @@ $(function () {
 
 
 
+// function getCookie(name) {
+//     var cookieValue = null;
+//     if (document.cookie && document.cookie !== '') {
+//         var cookies = document.cookie.split(';');
+//         for (var i = 0; i < cookies.length; i++) {
+//             var cookie = cookies[i].trim();
+
+//             if (cookie.substring(0, name.length + 1) === (name + '=')) {
+//                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+//                 break;
+//             }
+//         }
+//     }
+//     return cookieValue;
+// }
+// var csrftoken = getCookie('csrftoken');
+
+// function send_email(author) {
+//     var url = 'send_email_for_chat/';
+
+//     fetch(url, {
+//         method: 'POST',
+//         headers: {
+//             'Content-type': 'application/json',
+//             'X-CSRFToken': csrftoken,
+//         },
+//         body: JSON.stringify({ 'author': author })
+//     })
+
+// }
 
 
