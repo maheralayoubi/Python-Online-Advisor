@@ -106,7 +106,7 @@ def request_session(request, lesson_id):
                 [email],
                 fail_silently=False
             )
-        
+
     return render(request, 'request_session.html', {'lesson': lesson, 'logged_user': logged_user})
 
 
@@ -117,7 +117,7 @@ def forward_to_student(request, wf_id):
             choice = request.POST['choice']
             wf.status = 'Instructor Approved'
             wf.instructor_approved = True
-            
+
             if choice == wf.option1:
                 wf.option1_approved = True
             elif choice == wf.option2:
@@ -131,14 +131,14 @@ def forward_to_student(request, wf_id):
         wf.save()
         email = wf.student.email
         send_mail(
-                '「リクエストの申請が完了しました」',
+                '「リクエストの申請が完了しました」',
                 wf.student.name + ' 様, \n' +'「ふらっと相談オンライン」でアドバイザーから予約の候補⽇がきています。\n=== \n候補⽇ 1：'+ choice +'\n予約を確定する場合は、こちら '+ client_URL +' からログインして「承認する」ボタンを 送信してください。\n予約をキャンセルする場合は、「マイページ」から予約をキャンセルしてください。'  + Signature,
                 conf_settings.EMAIL_HOST_USER,
                 [email],
                 fail_silently=False
             )
         messages.success(
-            request, 'クエストの申請が完了しました ')
+            request, 'リクエストの申請が完了しました ')
         return redirect('profile', user_id=wf.instructor.Id)
 
     return redirect('profile', user_id=wf.instructor.Id)
@@ -162,7 +162,7 @@ def student_final_confirmation(request, wf_id):
             elif wf.option3_approved:
                 chosen = wf.option3
             email = wf.instructor.email
-            
+
             send_mail(
                     '予約が確定しました【ふらっと相談オンライン】',
                     wf.instructor.name + ' 様, \n'+ '下記の内容でご予約が確定しました。\n===  \nレッスンタイトル：キャリア⾯談 \n⽇程： '+ chosen +' \n担当：●●（アドバイザー名）\n=== \nこちら '+ client_URL +' からログインしていただき、ユーザーに使⽤する WEB ツールに \nついてご連絡してください。'+Signature ,
@@ -170,7 +170,7 @@ def student_final_confirmation(request, wf_id):
                     [email],
                     fail_silently=False
                 )
-          
+
     return redirect('student_profile', user_id=wf.student.Id)
 
 
@@ -216,7 +216,7 @@ def edit_session_request(request, wf_id):
         messages.success(
             request, "request has been edited, Go to your profile to check its status")
     return render(request, 'edit_session_request.html', {'lesson': lesson, 'logged_user': logged_user, 'wf': wf})
-    
+
 def complete_order(request):
     body = json.loads(request.body)
     wf = Widget_form.objects.get(pk=int(body['wf_id']))
@@ -227,11 +227,11 @@ def complete_order(request):
     lesson.student = logged_student
     lesson.save()
     new_lesson = Lesson(
-                        title=wf.lesson.title, 
-                        starting= wf.lesson.starting, 
-                        ending=wf.lesson.ending, 
+                        title=wf.lesson.title,
+                        starting= wf.lesson.starting,
+                        ending=wf.lesson.ending,
                         Date = datetime.now(),
-                        instructor = wf.lesson.instructor, 
+                        instructor = wf.lesson.instructor,
                         date_to_display = wf.lesson.date_to_display
                         )
     new_lesson.save()
@@ -264,15 +264,15 @@ def rate(request):
             rate = 4
         elif '5' in request.POST.keys():
             rate = 5
-        
+
 
         if 'lesson_id' in request.POST.keys():
             lsn_id = request.POST['lesson_id']
             if lsn_id != '':
                 lesson = Lesson.objects.get(pk = int(lsn_id))
-                lesson.instructor.number_of_ratings += 1 
-                lesson.instructor.total_ratings += rate 
+                lesson.instructor.number_of_ratings += 1
+                lesson.instructor.total_ratings += rate
                 lesson.instructor.rating =  lesson.instructor.total_ratings / lesson.instructor.number_of_ratings
                 lesson.instructor.save()
-                
+
     return redirect(page)
