@@ -87,7 +87,7 @@
     <div id="cards">
     {% if instructors %}
         {% for ins in instructors %}
-        
+
         <div class="card" id="mycard">
             <a href="{% url 'profile' ins.Id %}">
 
@@ -95,7 +95,7 @@
             <div>
                 <a href="{% url 'profile' ins.Id %}" class="card-title"> {{ins.name}}</a>
                 <div class="ins-field text-truncate">
-                    <p class="ins-field-text text-truncate">{{ins.field}}</p>
+                    <p class="ins-field-text text-truncate">{{ins.catch_phrase}}</p>
                 </div>
                 <p class="ins_what_you_can_ask_for text-truncate">{{ins.what_you_can_ask_for}}</p>
                 <div class="stars">
@@ -221,7 +221,7 @@
             }
 
         }
-        
+
 
         var startsession = document.getElementById("modal-btn");
 
@@ -247,11 +247,11 @@
         for (var i = 0; i < ti.length - 1; i++) {
             lessonhour1 = ti[i].innerHTML.slice(13, 16);
             lessonMinute1 = ti[i].innerHTML.slice(17, 20);
-            
+
 
             lhourparse1 = parseInt(lessonhour1, 10);
             lminuteparse1 = parseInt(lessonMinute1, 10);
-            
+
 
             var NEXTlessonhour = ti[i + 1].innerHTML.slice(13, 16);
             var NEXTlessonMinute = ti[i + 1].innerHTML.slice(17, 20);
@@ -278,11 +278,11 @@
 
 
         }
-        
+
 
         //cuntdown modal
         var beforestartsession = setInterval(function () {
-            
+
             for (var i = 0; i < ti.length; i++) {
                 // console.log(ti[i])
                 lessonhour = ti[i].innerHTML.slice(13, 16);
@@ -320,7 +320,7 @@
                 if (hour == h && minute == m) {
                     $("#myModal").modal("show");
 
-                    
+
                     startsession.disabled = true;
                     clearInterval(beforestartsession);
                     if (seconds > 0) {
@@ -332,7 +332,7 @@
                     }
 
                 }
-                
+
             }
             startsession.disabled = false;
 
