@@ -180,7 +180,7 @@ def resubmit(request, wf_id):
     wf.save()
     email = wf.instructor.email
     send_mail(
-            '予約の候補日がきています【ふらっと相談オンライン】',
+            '予約の再リクエスト申請がきています【ふらっと相談オンライン】',
             wf.student.name + ' 様' +'「ふらっと相談オンライン」でご希望の⽇程が合わなかったため、アドバイザーから予約の \n再リクエスト申請がきています。\n恐れ⼊りますが、こちら '+ client_URL +' からログインしていただき、別の⽇程で再度予 \n約リクエストを送信してください。' + Signature,
             conf_settings.EMAIL_HOST_USER,
             [email],
