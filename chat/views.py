@@ -14,7 +14,7 @@ from django.conf import settings as conf_settings
 
 fake = Faker()
 Signature = ' \n========== \nふらっと相談オンライン \nhttps://flatsodanonline.com \n《お問い合わせ》\nふらっと相談オンライン事務局 \ninfo@flatsodanonline.com （営業時間：平⽇ 10：00〜19：00）\n※本メールに覚えのない場合は、本メールを破棄して下さい。\n※本メールは⾃動送信のため、このメールへ直接返信は出来ません。'
-client_URL = "(client URL to be inserted here)"
+client_URL = "https://flatsodanonline.com/online-advisor/"
 
 def all_rooms(request):
     rooms = Room.objects.all()
