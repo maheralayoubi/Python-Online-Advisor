@@ -23,14 +23,14 @@ def links(request):
         messages.success(request, 'You Must Login First!')
         return redirect('mylogin')
     users = User.objects.all()
-
+    
     return render(request, 'links.html', {'users':users})
 
 
 def logout(request):
     request.session.clear()
     return redirect('mylogin')
-
+    
 def mylogin(request):
     ADMIN_EMAIL = 'admin@admin.com'
     ADMIN_PASS = 'ba7ra'
@@ -45,7 +45,7 @@ def mylogin(request):
             request.session['user_type']= 'admin'
             request.session['name'] = 'Admin'
             return redirect('admin_page')
-
+   
         if Student.objects.filter(username__exact=email).count() > 0:
             user = Student.objects.filter(username__exact=email)
             if user.get().password == password and not user.get().blocked:
@@ -85,18 +85,18 @@ def mylogin(request):
 def signup1(request):
     request.session.clear()
     if request.POST:
-
+       
         if 'name' in request.POST.keys() and 'email' in request.POST.keys() and 'inputpassword' in request.POST.keys():
             name =  request.POST['name']
             email = request.POST['email']
             passwrd = request.POST['inputpassword']
             user_type = request.POST['user-type']
-
+                      
             num_results = User.objects.filter(username__exact = email).count()
             if num_results > 0:
                 messages.success(request, 'Email Exists!!')
                 return render(request, 'sign-up-first-step.html')
-
+             
             if user_type == 'instructor':
                 newUser = Instructor()
             elif user_type =='student':
@@ -154,7 +154,7 @@ def signup3(request, user_id):
     if request.POST:
 
         typ = user_id[0]
-        if typ == 's':
+        if typ == 's': 
             user_id = int(user_id[1:])
             user = Student.objects.get(pk=user_id)
         else:
@@ -172,16 +172,16 @@ def resetPass(request):
             token = ''
             for i in range( len(str(email))):
                 token += email[i] + random.choice(string.ascii_letters)
-
-
+            
+            
             send_mail(
                     'Reset Password',
-                    'Dear User,\nPlease press on the link below to reset your password  <a href="https://flatsodanonline.com/online-advisor/resetPass2/ + token + '">this is the link</a> ',
+                    'Dear User,\nPlease press on the link below to reset your password  <a href="https://flatsodanonline.com/online-advisor//resetPass2/' + token + '">this is the link</a> ',
                     conf_settings.EMAIL_HOST_USER,
                     [email],
                     fail_silently=False
                 )
-
+            
             return redirect('resetPass1')
         else:
             messages.success(request, 'Email is Not registered')
@@ -201,7 +201,7 @@ def resetPass2(request, token):
         user.save()
         messages.success(request, 'Password has changed successfuly')
         return redirect('mylogin')
-
+   
     email = ''
     for i in range(len(token)):
         if i % 2 == 0:
@@ -221,7 +221,7 @@ def resetPass2(request, token):
 def admin_page(request):
     if not 'is_logged' in request.session.keys():
         return redirect('mylogin')
-    else:
+    else:    
         if request.session['user_type'] != 'admin':
             messages.success(request, 'You Must Login as an Admin!')
             return redirect('logout')
@@ -230,13 +230,13 @@ def admin_page(request):
     completed_lessons = []
     paid_wfs = Widget_form.objects.filter(paid__exact=True)
     now = datetime.now()
-
+    
     for x in paid_wfs:
         d_str = "-".join(get_approved_date(x))
         d_obj = datetime.strptime(d_str[2:-1], '%y-%m-%d')
-        if (d_obj < now):
+        if (d_obj < now): 
             completed_lessons.append(x.lesson)
-
+    
     tobe_started_lessons = Lesson.objects.filter(Date__gt=datetime.now())
     inprogress_lessons = Lesson.objects.filter(Date=datetime.today())
     monthly_completed_lessons = Lesson.objects.filter(Date__lt = datetime.now(), Date__gt = datetime.now() - relativedelta(months=1))
@@ -247,10 +247,10 @@ def admin_page(request):
     for lesson in completed_lessons:
         if lesson.Date.strftime('%m') in monthly_lessons.keys():
             monthly_lessons[lesson.Date.strftime('%m')] += 1500
-    return render(request, 'admin.html',
-
-                            context={   'completed_lessons':completed_lessons, 'tobe_started_lessons':tobe_started_lessons,
-                                        'inprogress_lessons':inprogress_lessons, 'instructors':instructors,
+    return render(request, 'admin.html', 
+    
+                            context={   'completed_lessons':completed_lessons, 'tobe_started_lessons':tobe_started_lessons, 
+                                        'inprogress_lessons':inprogress_lessons, 'instructors':instructors, 
                                         'students':students, 'len_completed_lessons':str(len(completed_lessons)),
                                         'len_inprogress_lessons':str(len(inprogress_lessons)), 'len_tobe_started_lessons':str(len(tobe_started_lessons)),
                                         'total_sales': total_sales, 'monthly_sales':monthly_sales, 'lsn_page':'lesson_page', 'monthly_lessons':monthly_lessons
@@ -282,7 +282,7 @@ def small_lesson_page(request):
     return render(request, 'smallLesson_page.html', {'logged_user': logged_user})
 
 def lesson_page(request, lesson_id):
-
+   
     if not 'is_logged' in request.session.keys():
         messages.success(request, 'You Must Login First!')
         return redirect('mylogin')
@@ -297,7 +297,7 @@ def block_instructor(request, user_id):
 
     user_x = Instructor.objects.get(pk= user_id)
     user_x.blocked = not user_x.blocked
-    user_x.save()
+    user_x.save()    
     return redirect('admin_page')
 
 def block_student(request, user_id):
@@ -355,23 +355,23 @@ def lesson_details(request, lesson_id):
     lesson = Lesson.objects.get(pk=lesson_id)
     todays_session = get_starting_time(request)
     return render(request, 'lesson_details.html', {'logged_user':logged_user, 'lesson':lesson, 'todays_session':todays_session})
-
+    
 def lesson_reservation(request):
-
+   
     if not 'is_logged' in request.session.keys():
         messages.success(request, 'You Must Login First!')
         return redirect('mylogin')
     logged_user = User.objects.get(username__exact=request.session['email'])
     if request.POST:
-
-        ins = Instructor.objects.get(username__exact=request.session['email'])
+      
+        ins = Instructor.objects.get(username__exact=request.session['email'])  
         lesson = Lesson(
-                        title=request.POST['lesson-title'],
-                        starting= request.POST['start-hour']+ ':'+request.POST['start-min'],
-                        ending=request.POST['end-hour'] +' : '+ request.POST['end-min'],
+                        title=request.POST['lesson-title'], 
+                        starting= request.POST['start-hour']+ ':'+request.POST['start-min'], 
+                        ending=request.POST['end-hour'] +' : '+ request.POST['end-min'], 
                         Date = datetime.now(),
                         day = request.POST['day'],
-                        instructor = ins,
+                        instructor = ins, 
                         date_to_display = '('+ request.POST['day'] +') ' + request.POST['start-hour']+ ':'+request.POST['start-min'] + ' ~ ' + request.POST['end-hour'] +' : '+ request.POST['end-min']
                         )
         lesson.save()
@@ -380,7 +380,7 @@ def lesson_reservation(request):
     history_lessons = Lesson.objects.filter(Date__lt = datetime.now() - timedelta(days=1), student__isnull = False)
     reserved_lessons = Lesson.objects.filter(student__isnull = False)
     todays_session = get_starting_time(request)
-
+    
     return render(request, 'lesson_reservation.html', {'available_lessons':available_lessons, 'history_lessons':history_lessons, 'reserved_lessons':reserved_lessons, 'logged_user':logged_user, 'todays_session': todays_session})
 
 
@@ -399,7 +399,7 @@ def delete_lesson_admin(request, lesson_id):
     lesson = Lesson.objects.get(pk=lesson_id)
     ins_email = lesson.instructor.email
     lesson.delete()
-
+    
     emails = [ins_email]
     student_name = 'No student signed up'
     if lesson.student is not None:
@@ -436,16 +436,16 @@ def profile(request, user_id):
     utc=pytz.UTC
     logged_user = User.objects.get(username__exact=request.session['email'])
     user = Instructor.objects.get(pk=user_id)
-
+    
     pending_wfs = (x for x in Widget_form.objects.all() if (x.instructor.Id == logged_user.Id and x.status=="Pending"))
     approved_wfs = (x for x in Widget_form.objects.all() if (x.instructor.Id == logged_user.Id and x.status == "Both Approved"))
-
+      
     user_lessons = (x for x in Lesson.objects.all() if (x.instructor.Id == user.Id))
     available_lessons = (x for x in Lesson.objects.all() if (x.instructor.Id == user.Id and not x.student))
     history_lessons = (x for x in Lesson.objects.filter(Date__lt = datetime.now() - timedelta(days=1)) if (x.instructor.Id == user.Id))
     todays_session = get_starting_time(request)
     return render(request, 'profile.html', {
-        'available_lessons':available_lessons,'user_lessons':user_lessons,'user':user,
+        'available_lessons':available_lessons,'user_lessons':user_lessons,'user':user, 
         'logged_user':logged_user, 'approved_wfs':approved_wfs, 'pending_wfs':pending_wfs, 'history_lessons':history_lessons, 'todays_session': todays_session})
 
 def edit_profile(request, user_id):
@@ -460,11 +460,11 @@ def edit_profile(request, user_id):
             fs = FileSystemStorage(location = conf_settings.MEDIA_ROOT)
             if os.path.isfile(conf_settings.MEDIA_ROOT + '\\' + user_id+ '_img'):
                 fs.delete(user_id+ '_img')
-
+           
             myfile = request.FILES['imgFile']
             filename = fs.save(user_id + '_img', myfile)
             user.img = user_id + '_img'
-
+        
         if 'profession' in request.POST.keys() and 'catch_phrase' in request.POST.keys():
             user.email = request.POST['email']
             user.name = request.POST['name']
@@ -474,7 +474,7 @@ def edit_profile(request, user_id):
             user.intro_msg = request.POST['self-introduction']
             user.what_you_can_ask_for = request.POST['what_you_can_ask_for']
             user.paypal_account = request.POST['paypal_account']
-            user.save()
+            user.save() 
             messages.success(request, 'Profile has been updated')
             return redirect('profile', user_id = int(user_id))
 
@@ -531,7 +531,7 @@ def edit_student_profile(request, user_id):
             filename = fs.save(user_id + '_img', myfile)
             user.img = user_id + '_img'
             user.save()
-
+        
         if 'catch_phrase' in request.POST.keys():
             user.email = request.POST['email']
             user.name = request.POST['name']
@@ -562,7 +562,7 @@ def get_starting_time(request):
     logged_user = User.objects.get(username__exact=request.session['email'])
     wfs = (x for x in Widget_form.objects.all() if ((x.student.Id == logged_user.Id or x.instructor.Id == logged_user.Id) and x.status == "Both Approved" and x.paid))
     todays_wfs = []
-
+       
     for x in wfs:
         d_str = "-".join(get_approved_date(x))
         d_obj = datetime.strptime(d_str[2:-1], '%y-%m-%d')
