@@ -14,7 +14,7 @@ from dateutil.relativedelta import *
 from django.conf import settings as conf_settings
 
 Signature = ' \n========== \nふらっと相談オンライン \nhttps://flatsodanonline.com \n《お問い合わせ》\nふらっと相談オンライン事務局 \ninfo@flatsodanonline.com （営業時間：平⽇ 10：00〜19：00）\n※本メールに覚えのない場合は、本メールを破棄して下さい。\n※本メールは⾃動送信のため、このメールへ直接返信は出来ません。'
-client_URL = "https://flatsodanonline.com/online-advisor/"
+client_URL = "flatsodanonline.com/online-advisor"
 
 
 
@@ -176,7 +176,7 @@ def resetPass(request):
 
             send_mail(
                     'Reset Password',
-                    'Dear User,\nPlease press on the link below to reset your password  <a href="https://flatsodanonline.com/online-advisor/resetPass2/' + token + '">this is the link</a> ',
+                    'Dear User,\nPlease press on the link below to reset your password  <a href="https://flatsodanonline.com/online-advisor/resetPass2/?token=' + token + '">this is the link</a> ',
                     conf_settings.EMAIL_HOST_USER,
                     [email],
                     fail_silently=False
@@ -192,30 +192,37 @@ def resetPass(request):
 def resetPass1(request):
     return render(request, 'reset-password1.html')
 
-def resetPass2(request, token):
+def extract_email(token):
+    if not token: token = 'empty'
+    email = ''
+    for i in range(len(token)):
+        if i % 2 == 0:
+            email += token[i]
+    return email
+
+def resetPass2(request):
 
     if request.POST:
-        email = token
+        email = request.POST['email']
         user = User.objects.get(username__exact = email)
         user.password = request.POST['password']
         user.save()
         messages.success(request, 'Password has changed successfuly')
         return redirect('mylogin')
 
-    email = ''
-    for i in range(len(token)):
-        if i % 2 == 0:
-            email += token[i]
-    num_results = User.objects.filter(username__exact = email).count()
-    if num_results:
-        user = User.objects.filter(username__exact = email)
-        messages.success(request, 'Welcome ')
-        return render(request, 'reset-password2.html', {'user':user, 'email':user.get().email})
-
     else:
-        messages.success(request, "YOU DON'T HAVE an ACCOUNT, please register first")
-        return redirect('signup1')
-    return render(request, 'reset-password2.html', {'user':user})
+        token = request.GET.get('token')
+        email = extract_email(token)
+        num_results = User.objects.filter(username__exact = email).count()
+        if num_results:
+            user = User.objects.filter(username__exact = email)
+            messages.success(request, 'Welcome ')
+            return render(request, 'reset-password2.html', {'user':user, 'email':user.get().email})
+
+        else:
+            messages.success(request, "YOU DON'T HAVE an ACCOUNT, please register first")
+            return redirect('signup1')
+        return render(request, 'reset-password2.html', {'user':user, 'email':email})
 
 
 def admin_page(request):

@@ -131,14 +131,14 @@ def forward_to_student(request, wf_id):
         wf.save()
         email = wf.student.email
         send_mail(
-                '「リクエストの申請が完了しました」',
+                '「予約の候補日がきています【ふらっと相談オンライン】」',
                 wf.student.name + ' 様, \n' +'「ふらっと相談オンライン」でアドバイザーから予約の候補⽇がきています。\n=== \n候補⽇ 1：'+ choice +'\n予約を確定する場合は、こちら '+ client_URL +' からログインして「承認する」ボタンを 送信してください。\n予約をキャンセルする場合は、「マイページ」から予約をキャンセルしてください。'  + Signature,
                 conf_settings.EMAIL_HOST_USER,
                 [email],
                 fail_silently=False
             )
         messages.success(
-            request, 'リクエストの申請が完了しました ')
+            request, '「予約の候補日がきています【ふらっと相談オンライン】」')
         return redirect('profile', user_id=wf.instructor.Id)
 
     return redirect('profile', user_id=wf.instructor.Id)
