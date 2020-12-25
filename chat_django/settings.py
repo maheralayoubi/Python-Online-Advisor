@@ -15,6 +15,12 @@ import os
 import dj_database_url
 from dotenv import load_dotenv
 
+
+FORCE_SCRIPT_NAME  = '/online-advisor/'
+SCRIPT_NAME = '/online-advisor/'
+USE_X_FORWARDED_HOST = True
+SESSION_COOKIE_PATH = '/online-advisor/'
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -133,11 +139,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = FORCE_SCRIPT_NAME+'static/'
 
 
 # Simplified static file serving.
@@ -169,3 +172,6 @@ MEDIA_URL = '/media/'
 AUTHENTICATION_BACKENDS = (
         'django.contrib.auth.backends.ModelBackend',
     )
+
+LOGIN_URL = FORCE_SCRIPT_NAME+'login/'
+LOGOUT_REDIRECT_URL = FORCE_SCRIPT_NAME +'login/'

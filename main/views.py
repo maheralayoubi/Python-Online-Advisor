@@ -20,7 +20,7 @@ client_URL = "flatsodanonline.com/online-advisor"
 
 def links(request):
     if not 'is_logged' in request.session.keys():
-        messages.success(request, 'You Must Login First!')
+        messages.success(request, 'あなたが最初にログインする必要があります')
         return redirect('mylogin')
     users = User.objects.all()
 
@@ -244,7 +244,7 @@ def admin_page(request):
         if (d_obj < now):
             completed_lessons.append(x.lesson)
 
-    tobe_started_lessons = Lesson.objects.filter(Date__gt=datetime.now())
+    tobe_started_lessons = Lesson.objects.filter(student__isnull = False)
     inprogress_lessons = Lesson.objects.filter(Date=datetime.today())
     monthly_completed_lessons = Lesson.objects.filter(Date__lt = datetime.now(), Date__gt = datetime.now() - relativedelta(months=1))
     total_sales = 1500 * len(completed_lessons)
@@ -266,7 +266,7 @@ def admin_page(request):
 
 def instructor_page(request, ins_id):
     if not 'is_logged' in request.session.keys():
-        messages.success(request, 'You Must Login First!')
+        messages.success(request, 'あなたが最初にログインする必要があります')
         return redirect('mylogin')
 
     ins = Instructor.objects.get(pk=ins_id)
@@ -274,7 +274,7 @@ def instructor_page(request, ins_id):
 
 def student_page(request, stu_id):
     if not 'is_logged' in request.session.keys():
-        messages.success(request, 'You Must Login First!')
+        messages.success(request, 'あなたが最初にログインする必要があります')
         return redirect('mylogin')
 
     stu = Student.objects.get(pk=stu_id)
@@ -282,7 +282,7 @@ def student_page(request, stu_id):
 
 def small_lesson_page(request):
     if not 'is_logged' in request.session.keys():
-        messages.success(request, 'You Must Login First!')
+        messages.success(request, 'あなたが最初にログインする必要があります')
         return redirect('mylogin')
     logged_user = User.objects.get(username__exact=request.session['email'])
 
@@ -291,7 +291,7 @@ def small_lesson_page(request):
 def lesson_page(request, lesson_id):
 
     if not 'is_logged' in request.session.keys():
-        messages.success(request, 'You Must Login First!')
+        messages.success(request, 'あなたが最初にログインする必要があります')
         return redirect('mylogin')
     logged_user = User.objects.get(username__exact=request.session['email'])
     lesson = Lesson.objects.get(pk=lesson_id)
@@ -299,7 +299,7 @@ def lesson_page(request, lesson_id):
 
 def block_instructor(request, user_id):
     if not 'is_logged' in request.session.keys():
-        messages.success(request, 'You Must Login First!')
+        messages.success(request, 'あなたが最初にログインする必要があります')
         return redirect('mylogin')
 
     user_x = Instructor.objects.get(pk= user_id)
@@ -309,7 +309,7 @@ def block_instructor(request, user_id):
 
 def block_student(request, user_id):
     if not 'is_logged' in request.session.keys():
-        messages.success(request, 'You Must Login First!')
+        messages.success(request, 'あなたが最初にログインする必要があります')
         return redirect('mylogin')
 
     user_x = Student.objects.get(pk= user_id)
@@ -319,7 +319,7 @@ def block_student(request, user_id):
 
 def advisors_page(request):
     if not 'is_logged' in request.session.keys():
-        messages.success(request, 'You Must Login First!')
+        messages.success(request, 'あなたが最初にログインする必要があります')
         return redirect('mylogin')
     logged_user = User.objects.get(username__exact=request.session['email'])
 
@@ -329,7 +329,7 @@ def advisors_page(request):
 
 def edit_lesson_reservation(request, lesson_id):
     if not 'is_logged' in request.session.keys():
-        messages.success(request, 'You Must Login First!')
+        messages.success(request, 'あなたが最初にログインする必要があります')
         return redirect('mylogin')
     logged_user = User.objects.get(username__exact=request.session['email'])
 
@@ -347,7 +347,7 @@ def edit_lesson_reservation(request, lesson_id):
 
 def history_lessons(request):
     if not 'is_logged' in request.session.keys():
-        messages.success(request, 'You Must Login First!')
+        messages.success(request, 'あなたが最初にログインする必要があります')
         return redirect('mylogin')
     logged_user = User.objects.get(username__exact=request.session['email'])
     lessons = Lesson.objects.filter(Date__lt = datetime.now() - timedelta(days = 1))
@@ -356,7 +356,7 @@ def history_lessons(request):
 
 def lesson_details(request, lesson_id):
     if not 'is_logged' in request.session.keys():
-        messages.success(request, 'You Must Login First!')
+        messages.success(request, 'あなたが最初にログインする必要があります')
         return redirect('mylogin')
     logged_user = User.objects.get(username__exact=request.session['email'])
     lesson = Lesson.objects.get(pk=lesson_id)
@@ -366,7 +366,7 @@ def lesson_details(request, lesson_id):
 def lesson_reservation(request):
 
     if not 'is_logged' in request.session.keys():
-        messages.success(request, 'You Must Login First!')
+        messages.success(request, 'あなたが最初にログインする必要があります')
         return redirect('mylogin')
     logged_user = User.objects.get(username__exact=request.session['email'])
     if request.POST:
@@ -393,7 +393,7 @@ def lesson_reservation(request):
 
 def reserved_lessons(request):
     if not 'is_logged' in request.session.keys():
-        messages.success(request, 'You Must Login First!')
+        messages.success(request, 'あなたが最初にログインする必要があります')
         return redirect('mylogin')
     logged_user = User.objects.get(username__exact=request.session['email'])
 
@@ -430,7 +430,7 @@ def delete_lesson_admin(request, lesson_id):
 
 def delete_lesson(request, lesson_id):
     if not 'is_logged' in request.session.keys():
-        messages.success(request, 'You Must Login First!')
+        messages.success(request, 'あなたが最初にログインする必要があります')
         return redirect('mylogin')
     lesson = Lesson.objects.get(pk=lesson_id)
     lesson.delete()
@@ -438,7 +438,7 @@ def delete_lesson(request, lesson_id):
 
 def profile(request, user_id):
     if not 'is_logged' in request.session.keys():
-        messages.success(request, 'You Must Login First!')
+        messages.success(request, 'あなたが最初にログインする必要があります')
         return redirect('mylogin')
     utc=pytz.UTC
     logged_user = User.objects.get(username__exact=request.session['email'])
@@ -459,7 +459,7 @@ def edit_profile(request, user_id):
     print('url is : ', conf_settings.BASE_DIR)
     print('media:  ', conf_settings.MEDIA_ROOT)
     if not 'is_logged' in request.session.keys():
-        messages.success(request, 'You Must Login First!')
+        messages.success(request, 'あなたが最初にログインする必要があります')
         return redirect('mylogin')
     if request.POST:
         user = Instructor.objects.get(pk= user_id)
@@ -494,7 +494,7 @@ def edit_profile(request, user_id):
 def join_lesson(request, lesson_id):
     CREATED_BY = 20031996
     if not 'is_logged' in request.session.keys():
-        messages.success(request, 'You Must Login First!')
+        messages.success(request, 'あなたが最初にログインする必要があります')
         return redirect('mylogin')
 
     logged_user = Student.objects.get(username__exact=request.session['email'])
@@ -512,7 +512,7 @@ def join_lesson(request, lesson_id):
 
 def student_profile(request, user_id):
     if not 'is_logged' in request.session.keys():
-        messages.success(request, 'You Must Login First!')
+        messages.success(request, 'あなたが最初にログインする必要があります')
         return redirect('mylogin')
     logged_user = User.objects.get(username__exact=request.session['email'])
     if not(int(user_id) == logged_user.Id):
@@ -526,7 +526,7 @@ def student_profile(request, user_id):
 
 def edit_student_profile(request, user_id):
     if not 'is_logged' in request.session.keys():
-        messages.success(request, 'You Must Login First!')
+        messages.success(request, 'あなたが最初にログインする必要があります')
         return redirect('mylogin')
     if request.POST:
         user = Student.objects.get(pk= user_id)

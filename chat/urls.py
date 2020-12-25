@@ -13,6 +13,5 @@ urlpatterns = [
     url(r'student_final_confirmation/(?P<wf_id>.+)', views.student_final_confirmation, name="student_final_confirmation"),
     url(r'resubmit/(?P<wf_id>.+)', views.resubmit, name="resubmit"),
     url(r'complete_order/$', views.complete_order, name="complete_order"),
-    url(r'send_email_for_chat/$', views.send_email_for_chat, name="send_email_for_chat"),
     url(r'rate/$', views.rate, name="rate"),
 ]

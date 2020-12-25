@@ -56,7 +56,7 @@ def token(request):
 
 def chat(request):
     if not 'is_logged' in request.session.keys():
-        messages.success(request, 'You Must Login First!')
+        messages.success(request, 'あなたが最初にログインする必要があります')
         return redirect('mylogin')
     logged_user = User.objects.get(username__exact=request.session['email'])
 
@@ -75,7 +75,8 @@ def chat(request):
 
 def request_session(request, lesson_id):
     if not 'is_logged' in request.session.keys():
-        messages.success(request, 'You Must Login First!')
+        messages.success(request, 'あなたが最初にログインする必要があります')
+
         return redirect('mylogin')
     logged_user = User.objects.get(username__exact=request.session['email'])
 
@@ -131,8 +132,8 @@ def forward_to_student(request, wf_id):
         wf.save()
         email = wf.student.email
         send_mail(
-                '「予約の候補日がきています【ふらっと相談オンライン】」',
-                wf.student.name + ' 様, \n' +'「ふらっと相談オンライン」でアドバイザーから予約の候補⽇がきています。\n=== \n候補⽇ 1：'+ choice +'\n予約を確定する場合は、こちら '+ client_URL +' からログインして「承認する」ボタンを 送信してください。\n予約をキャンセルする場合は、「マイページ」から予約をキャンセルしてください。'  + Signature,
+                '予約の候補日がきています【ふらっと相談オンライン】',
+                wf.student.name + ' 様, \n' +'「ふらっと相談オンライン」でアドバイザーから予約の候補⽇がきています。\n=== \n候補⽇ 1：'+ choice +'\n予約を確定する場合は、こちら '+ client_URL +' からログインして「同意する」ボタンを送信してください。\n予約をキャンセルする場合は、「お名前」「メールアドレス」「ご予約⽇時」を記載の上、ふらっと相談オンライン事務局（info@flatsodanonline.com）までご連絡ください。'  + Signature,
                 conf_settings.EMAIL_HOST_USER,
                 [email],
                 fail_silently=False
@@ -165,7 +166,7 @@ def student_final_confirmation(request, wf_id):
 
             send_mail(
                     '予約が確定しました【ふらっと相談オンライン】',
-                    wf.instructor.name + ' 様, \n'+ '下記の内容でご予約が確定しました。\n===  \nレッスンタイトル：キャリア⾯談 \n⽇程： '+ chosen +' \n担当：●●（アドバイザー名）\n=== \nこちら '+ client_URL +' からログインしていただき、ユーザーに使⽤する WEB ツールに \nついてご連絡してください。'+Signature ,
+                    wf.instructor.name + ' 様, \n'+ '下記の内容でご予約が確定しました。\n===  \nレッスンタイトル：'+ wf.lesson.title +' \n⽇程： '+ chosen +' \n担当：'+ wf.instructor.name +'\n=== \nこちら '+ client_URL +' からログインしていただき、ユーザーに使⽤する WEB ツールに \nついてご連絡してください。'+Signature ,
                     conf_settings.EMAIL_HOST_USER,
                     [email],
                     fail_silently=False
@@ -187,7 +188,7 @@ def resubmit(request, wf_id):
             fail_silently=False
         )
 
-    messages.success(request, '学生は再提出する必要があります')
+    messages.success(request, '再リクエストの送信が完了しました')
     return redirect('profile', user_id=wf.instructor.Id)
 
 
@@ -214,7 +215,7 @@ def edit_session_request(request, wf_id):
         wf.status = "Pending"
         wf.save()
         messages.success(
-            request, "request has been edited, Go to your profile to check its status")
+            request, "リクエストが編集されました。プロフィールに移動してステータスを確認してください")
     return render(request, 'edit_session_request.html', {'lesson': lesson, 'logged_user': logged_user, 'wf': wf})
 
 def complete_order(request):
@@ -236,12 +237,6 @@ def complete_order(request):
                         )
     new_lesson.save()
     return JsonResponse('Payment completed', safe=False)
-
-def send_email_for_chat(request):
-    body = json.loads(request.body)
-    print(body['author'], "kiss me")
-    print ("oh yeah")
-    return JsonResponse('Email Sent', safe=False)
 
 
 
