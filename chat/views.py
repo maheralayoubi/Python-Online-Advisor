@@ -127,7 +127,7 @@ def forward_to_student(request, wf_id):
                 wf.option3_approved = True
         else:
             messages.success(
-                request, 'YOU MUST SELECT A DAY TO APPROVE OR ASK STUDENT TO RESUBMIT')
+                request, '承認する日を選択するか、再提出を依頼する必要があります')
             return redirect('profile', user_id=wf.instructor.Id)
         wf.save()
         email = wf.student.email
