@@ -14,7 +14,7 @@ from django.conf import settings as conf_settings
 
 fake = Faker()
 Signature = ' \n========== \nふらっと相談オンライン \nhttps://flatsodanonline.com \n《お問い合わせ》\nふらっと相談オンライン事務局 \ninfo@flatsodanonline.com （営業時間：平⽇ 10：00〜19：00）\n※本メールに覚えのない場合は、本メールを破棄して下さい。\n※本メールは⾃動送信のため、このメールへ直接返信は出来ません。'
-client_URL = "https://flatsodanonline.com/online-advisor/"
+client_URL = "flatsodanonline.com/online-advisor"
 
 def all_rooms(request):
     rooms = Room.objects.all()
@@ -56,7 +56,7 @@ def token(request):
 
 def chat(request):
     if not 'is_logged' in request.session.keys():
-        messages.success(request, 'あなたが最初にログインする必要があります')
+        messages.success(request, 'You Must Login First!')
         return redirect('mylogin')
     logged_user = User.objects.get(username__exact=request.session['email'])
 
@@ -75,8 +75,7 @@ def chat(request):
 
 def request_session(request, lesson_id):
     if not 'is_logged' in request.session.keys():
-        messages.success(request, 'あなたが最初にログインする必要があります')
-
+        messages.success(request, 'You Must Login First!')
         return redirect('mylogin')
     logged_user = User.objects.get(username__exact=request.session['email'])
 
@@ -107,7 +106,7 @@ def request_session(request, lesson_id):
                 [email],
                 fail_silently=False
             )
-
+        
     return render(request, 'request_session.html', {'lesson': lesson, 'logged_user': logged_user})
 
 
@@ -118,7 +117,7 @@ def forward_to_student(request, wf_id):
             choice = request.POST['choice']
             wf.status = 'Instructor Approved'
             wf.instructor_approved = True
-
+            
             if choice == wf.option1:
                 wf.option1_approved = True
             elif choice == wf.option2:
@@ -132,14 +131,14 @@ def forward_to_student(request, wf_id):
         wf.save()
         email = wf.student.email
         send_mail(
-                '予約の候補日がきています【ふらっと相談オンライン】',
-                wf.student.name + ' 様, \n' +'「ふらっと相談オンライン」でアドバイザーから予約の候補⽇がきています。\n=== \n候補⽇ 1：'+ choice +'\n予約を確定する場合は、こちら '+ client_URL +' からログインして「同意する」ボタンを送信してください。\n予約をキャンセルする場合は、「お名前」「メールアドレス」「ご予約⽇時」を記載の上、ふらっと相談オンライン事務局（info@flatsodanonline.com）までご連絡ください。'  + Signature,
+                '「リクエストの申請が完了しました」',
+                wf.student.name + ' 様, \n' +'「ふらっと相談オンライン」でアドバイザーから予約の候補⽇がきています。\n=== \n候補⽇ 1：'+ choice +'\n予約を確定する場合は、こちら '+ client_URL +' からログインして「承認する」ボタンを 送信してください。\n予約をキャンセルする場合は、「マイページ」から予約をキャンセルしてください。'  + Signature,
                 conf_settings.EMAIL_HOST_USER,
                 [email],
                 fail_silently=False
             )
         messages.success(
-            request, '「予約の候補日がきています【ふらっと相談オンライン】」')
+            request, 'クエストの申請が完了しました ')
         return redirect('profile', user_id=wf.instructor.Id)
 
     return redirect('profile', user_id=wf.instructor.Id)
@@ -163,15 +162,15 @@ def student_final_confirmation(request, wf_id):
             elif wf.option3_approved:
                 chosen = wf.option3
             email = wf.instructor.email
-
+            
             send_mail(
                     '予約が確定しました【ふらっと相談オンライン】',
-                    wf.instructor.name + ' 様, \n'+ '下記の内容でご予約が確定しました。\n===  \nレッスンタイトル：'+ wf.lesson.title +' \n⽇程： '+ chosen +' \n担当：'+ wf.instructor.name +'\n=== \nこちら '+ client_URL +' からログインしていただき、ユーザーに使⽤する WEB ツールに \nついてご連絡してください。'+Signature ,
+                    wf.instructor.name + ' 様, \n'+ '下記の内容でご予約が確定しました。\n===  \nレッスンタイトル：キャリア⾯談 \n⽇程： '+ chosen +' \n担当：●●（アドバイザー名）\n=== \nこちら '+ client_URL +' からログインしていただき、ユーザーに使⽤する WEB ツールに \nついてご連絡してください。'+Signature ,
                     conf_settings.EMAIL_HOST_USER,
                     [email],
                     fail_silently=False
                 )
-
+          
     return redirect('student_profile', user_id=wf.student.Id)
 
 
@@ -181,14 +180,14 @@ def resubmit(request, wf_id):
     wf.save()
     email = wf.instructor.email
     send_mail(
-            '予約の再リクエスト申請がきています【ふらっと相談オンライン】',
+            '予約の候補日がきています【ふらっと相談オンライン】',
             wf.student.name + ' 様' +'「ふらっと相談オンライン」でご希望の⽇程が合わなかったため、アドバイザーから予約の \n再リクエスト申請がきています。\n恐れ⼊りますが、こちら '+ client_URL +' からログインしていただき、別の⽇程で再度予 \n約リクエストを送信してください。' + Signature,
             conf_settings.EMAIL_HOST_USER,
             [email],
             fail_silently=False
         )
 
-    messages.success(request, '再リクエストの送信が完了しました')
+    messages.success(request, '学生は再提出する必要があります')
     return redirect('profile', user_id=wf.instructor.Id)
 
 
@@ -215,9 +214,9 @@ def edit_session_request(request, wf_id):
         wf.status = "Pending"
         wf.save()
         messages.success(
-            request, "リクエストが編集されました。プロフィールに移動してステータスを確認してください")
+            request, "request has been edited, Go to your profile to check its status")
     return render(request, 'edit_session_request.html', {'lesson': lesson, 'logged_user': logged_user, 'wf': wf})
-
+    
 def complete_order(request):
     body = json.loads(request.body)
     wf = Widget_form.objects.get(pk=int(body['wf_id']))
@@ -228,15 +227,21 @@ def complete_order(request):
     lesson.student = logged_student
     lesson.save()
     new_lesson = Lesson(
-                        title=wf.lesson.title,
-                        starting= wf.lesson.starting,
-                        ending=wf.lesson.ending,
+                        title=wf.lesson.title, 
+                        starting= wf.lesson.starting, 
+                        ending=wf.lesson.ending, 
                         Date = datetime.now(),
-                        instructor = wf.lesson.instructor,
+                        instructor = wf.lesson.instructor, 
                         date_to_display = wf.lesson.date_to_display
                         )
     new_lesson.save()
     return JsonResponse('Payment completed', safe=False)
+
+def send_email_for_chat(request):
+    body = json.loads(request.body)
+    print(body['author'], "kiss me")
+    print ("oh yeah")
+    return JsonResponse('Email Sent', safe=False)
 
 
 
@@ -259,15 +264,15 @@ def rate(request):
             rate = 4
         elif '5' in request.POST.keys():
             rate = 5
-
+        
 
         if 'lesson_id' in request.POST.keys():
             lsn_id = request.POST['lesson_id']
             if lsn_id != '':
                 lesson = Lesson.objects.get(pk = int(lsn_id))
-                lesson.instructor.number_of_ratings += 1
-                lesson.instructor.total_ratings += rate
+                lesson.instructor.number_of_ratings += 1 
+                lesson.instructor.total_ratings += rate 
                 lesson.instructor.rating =  lesson.instructor.total_ratings / lesson.instructor.number_of_ratings
                 lesson.instructor.save()
-
+                
     return redirect(page)
